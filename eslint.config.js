@@ -1,9 +1,8 @@
-import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import ts from '@typescript-eslint/parser'; // Thêm parser cho TypeScript
-import tsConfig from '@typescript-eslint/eslint-plugin'; // Thêm plugin cho TypeScript
+import ts from '@typescript-eslint/parser'; 
+import tsConfig from '@typescript-eslint/eslint-plugin'; 
 
 export default [
   { ignores: ['dist'] },
@@ -20,14 +19,16 @@ export default [
       '@typescript-eslint': tsConfig,
     },
     rules: {
-      'no-unused-vars': 'off', // Tắt quy tắc no-unused-vars
+      'no-unused-vars': 'off', // Tắt quy tắc no-unused-vars của ESLint
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { 'vars': 'all', 'varsIgnorePattern': '^_', 'argsIgnorePattern': '^_' },
+      ], // Tắt cảnh báo cho import không sử dụng bắt đầu với dấu _
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
-      // Các quy tắc cho TypeScript
-      '@typescript-eslint/no-unused-vars': ['error'],
     },
     settings: {
       react: {
@@ -35,7 +36,7 @@ export default [
       },
     },
   },
-  
+
   // Các cấu hình bổ sung cho React
   {
     files: ['**/*.tsx', '**/*.ts'],
@@ -43,7 +44,7 @@ export default [
       parser: ts,
       globals: {
         ...globals.browser,
-        'React': true, // Biến React có sẵn
+        React: true, // Biến React có sẵn
       },
     },
     rules: {
@@ -52,3 +53,4 @@ export default [
     },
   },
 ];
+

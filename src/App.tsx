@@ -1,12 +1,7 @@
-import { Button } from './components/ui/button';
+import Router from './router/Router';
 
 function App() {
-  return (
-    <div>
-      <Button>Click me</Button>
-      <h1>Hello word</h1>
-    </div>
-  );
+  return <Router />;
 }
 
 export default App;
