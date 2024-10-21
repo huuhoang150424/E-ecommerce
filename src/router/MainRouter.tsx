@@ -1,14 +1,14 @@
-import Header from '@/components/headers/Header';
-import { HomeScreen } from '@/screen/user';
+import { HomeScreen, NotFoundScreen } from '@/screen/user';
 import { Route, Routes } from 'react-router-dom';
+import { MainLayout } from '@/layout';
 
 export default function MainRouter() {
   return (
-    <div>
-      <Header />
+    <MainLayout>
       <Routes>
         <Route path='/home' element={<HomeScreen />} />
+        <Route path='*' element={<NotFoundScreen />} />
       </Routes>
-    </div>
+    </MainLayout>
   );
 }

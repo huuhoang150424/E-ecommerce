@@ -14,21 +14,21 @@ export default function SignUpScreen() {
       </CardHeader>
       <CardContent className='flex flex-col gap-[300px]'>
         <div className='flex flex-col gap-[15px]'>
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-[12px] '>
             <Label className='font-[400] ' htmlFor='password'>Tên người dùng</Label>
-            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[20px] ' required />
+            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[10px] ' required />
           </div>
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-[12px] '>
             <Label className='font-[400] text-textColor' htmlFor='email'>Email</Label>
-            <Input id='email' type='email' placeholder='' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[20px] ' required />
+            <Input id='email' type='email' placeholder='' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[10px] ' required />
           </div>
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-[12px] '>
             <Label className='font-[400] ' htmlFor='password'>Mật Khẩu</Label>
-            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[20px] ' required />
+            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[10px] ' required />
           </div>
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-[12px] '>
             <Label className='font-[400] ' htmlFor='password'>Nhắc lại mật khẩu</Label>
-            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[20px] ' required />
+            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[10px] ' required />
           </div>
           <Button type='submit' variant={'primaryColor'} className='w-[30%] rounded-[30px] mt-[30px] ml-[310px] '>
             Đăng ký

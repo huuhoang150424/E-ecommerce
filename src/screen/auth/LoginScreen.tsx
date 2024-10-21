@@ -1,8 +1,4 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/1ADs2FRNaQg
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -24,13 +20,13 @@ export default function LoginScreen() {
       </CardHeader>
       <CardContent className='flex flex-col gap-[300px]'>
         <div className='flex flex-col gap-[15px]'>
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-[12px]'>
             <Label className='font-[400] text-textColor' htmlFor='email'>Email</Label>
-            <Input id='email' type='email' placeholder='' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[20px] ' required />
+            <Input id='email' type='email' placeholder='' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[10px] ' required />
           </div>
-          <div className='space-y-2'>
+          <div className='flex flex-col gap-[12px]'>
             <Label className='font-[400] ' htmlFor='password'>Password</Label>
-            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[20px] ' required />
+            <Input id='password' type='password' className='rounded-[30px] border border-primaryColor outline-none px-[16px] py-[10px] ' required />
           </div>
           <div className="flex items-center space-x-2">
             <Checkbox id="terms" />

@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --primary-color: #9E896A;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -29,6 +30,8 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    
   }
 
   .dark {
@@ -63,8 +66,128 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden overflow-y-scroll;
+  }
+  .wrapper {
+    @apply px-[60px];
+  }
+} 
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.3;
   }
 }
+
+.fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.fade-out {
+  animation: fade-out 0.5s ease-out forwards;
+}
+
+
+.slide-bottom {
+	animation: slide-bottom 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+} 
+@keyframes slide-bottom {
+  0% {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(2px);
+    opacity: 1;
+  }
+}
+.slide-top {
+	animation: slide-top 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  pointer-events: none;
+}
+@keyframes slide-top {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-3px);
+    opacity: 0;
+  }
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 15s linear infinite;
+}
+@keyframes marquee {
+  0% { 
+      transform: translateX(190%); 
+  }
+
+  100% { 
+      transform: translateX(-190%); 
+  }
+}
+
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.2;
+    transform: translateY(15px); 
+  }
+  30% {
+    opacity: 0.5; 
+    transform: translateY(7px); 
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); 
+  }
+}
+
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+
+.fade-in-scroll {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.fade-out-scroll {
+  animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+
+.loader-shadow {
+  animation: shadow324 0.5s linear infinite;
+}
+
+.loader-circle {
+  animation: jump7456 0.5s linear infinite;
+}
+

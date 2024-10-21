@@ -13,8 +13,12 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-        primaryColor: "#9E896A",
-        textColor: '#585858',
+  			primaryColor: 'var(--primary-color)',
+  			colorDarkMode: '#020817',
+  			textColor: '#585858',
+  			lineColor: '#969696',
+  			redColor: '#ff0000',
+  			borderDarkMode: '#1e293b',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -55,6 +59,50 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
+  		},
+  		animation: {
+  			'fade-in': 'fadeIn 0.8s ease-in-out',
+  			'fade-out': 'fadeOut 0.8s ease-in-out',
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
+  		},
+  		keyframes: {
+  			fadeIn: {
+  				'0%': {
+  					opacity: '0'
+  				},
+  				'100%': {
+  					opacity: '1'
+  				}
+  			},
+  			fadeOut: {
+  				'0%': {
+  					opacity: '1'
+  				},
+  				'100%': {
+  					opacity: '0'
+  				}
+  			},
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		duration: {
+  			'50': '50ms',
+  			'100': '100ms'
   		}
   	}
   },
