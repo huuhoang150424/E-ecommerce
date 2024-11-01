@@ -1,7 +1,13 @@
-import  DashBoardScreen  from '@/screen/admin/DashBoardScreen';
+import  DashBoardScreen  from './DashBoardScreen';
+import CategoryScreen from './CategoryScreen';
 import ProductScreen from './Products/ProductScreen';
+import CreateProductScreen from './Products/CreateProductScreen';
+import ReviewScreen from './Products/ReviewScreen';
 
 export {
   DashBoardScreen,
-  ProductScreen
+  ProductScreen,
+  CategoryScreen,
+  CreateProductScreen,
+  ReviewScreen
 }

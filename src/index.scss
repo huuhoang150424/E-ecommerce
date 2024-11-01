@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --star-color: #fdd835;
     --primary-color: #9E896A;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -70,7 +71,7 @@
     @apply bg-background text-foreground overflow-x-hidden overflow-y-scroll;
   }
   .wrapper {
-    @apply px-[60px];
+    @apply px-[80px];
   }
 } 
 
@@ -191,3 +192,11 @@
   animation: jump7456 0.5s linear infinite;
 }
 
+/* custom paginate style swiper  */
+.swiper-pagination-bullet {
+  @apply opacity-100; /* Độ mờ */
+}
+
+.swiper-pagination-bullet-active {
+  @apply bg-primaryColor opacity-100; /* Màu nền cho bullet active */
+}

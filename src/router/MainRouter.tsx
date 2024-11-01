@@ -6,7 +6,7 @@ export default function MainRouter() {
   return (
     <MainLayout>
       <Routes>
-        <Route path='/home' element={<HomeScreen />} />
+        <Route path='/' element={<HomeScreen />} />
         <Route path='*' element={<NotFoundScreen />} />
       </Routes>
     </MainLayout>

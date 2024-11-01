@@ -19,6 +19,7 @@ export default {
   			lineColor: '#969696',
   			redColor: '#ff0000',
   			borderDarkMode: '#1e293b',
+        starColor: 'var(--star-color)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

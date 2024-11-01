@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle,CardDescription} from '@/components/ui/card'
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis ,CartesianGrid,Tooltip} from 'recharts'
 
 export default function DashBoardScreen() {
 
@@ -112,6 +112,7 @@ function Overview() {
   return (
     <ResponsiveContainer width='100%' height={350}>
       <BarChart data={data}>
+        <CartesianGrid vertical={false} stroke="#ccc" strokeDasharray="5 5" />
         <XAxis
           dataKey='name'
           stroke='#888888'
@@ -125,6 +126,10 @@ function Overview() {
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `$${value}`}
+        />
+        <Tooltip
+          cursor={{ fill: 'transparent' }} // Để ẩn cursor khi hover
+          formatter={(value) => [`Total: $${value}`, '']} // Định dạng label hiển thị
         />
         <Bar
           dataKey='total'

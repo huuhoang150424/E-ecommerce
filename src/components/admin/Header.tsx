@@ -1,21 +1,16 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuGroup,
-  DropdownMenuSeparator
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator} from '@/components/ui/dropdown-menu';
 import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/context/ThemeProvider';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/redux/authReducer';
 interface Props {
   className?: string
 }
 
 export default function Header({className}:Props) {
+  const user:any=useSelector(selectUser)
   const {theme,toggleTheme}=useTheme();
 
   const navigate = useNavigate();
@@ -49,15 +44,15 @@ export default function Header({className}:Props) {
           <DropdownMenuTrigger asChild>
               <img
                 className='h-8 w-8 rounded-full object-cover  cursor-pointer hover:opacity-70 transition-all duration-300 ease-in-out'
-                src='https://phunuvietnam.mediacdn.vn/media/news/33abffcedac43a654ac7f501856bf700/anh-profile-tiet-lo-g-ve-ban-1.jpg' 
+                src={user.avatar} 
                 alt='User Avatar'
               />
           </DropdownMenuTrigger>
           <DropdownMenuContent className='w-56' align='end' forceMount>
             <DropdownMenuLabel className='font-normal'>
               <div className='flex flex-col space-y-1'>
-                <p className='text-sm font-medium leading-none'>satnaing</p>
-                <p className='text-xs leading-none text-muted-foreground'>nguyenhoanghuu15042004@gm...</p>
+                <p className='text-sm font-medium leading-none'>{user.name}</p>
+                <p className='text-xs leading-none text-muted-foreground'>{user.email}</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -66,7 +61,7 @@ export default function Header({className}:Props) {
               <DropdownMenuItem>Cài đặt</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate('/home')}>Thoát</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/')}>Thoát</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

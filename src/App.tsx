@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Router from './router/Router';
+import { Toaster } from './components/ui/toaster';
 
 function App() {
   const cursorMouse = useRef<HTMLDivElement | null>(null);
@@ -39,6 +40,7 @@ function App() {
 
   return (
     <div className=''>
+      <Toaster/>
       <div
         ref={cursorMouse}
         className='w-[40px] h-[40px] rounded-full bg-transparent border-[2px] border-primaryColor absolute left-0 top-0 z-[999998] transition-transform duration-1000 ease-out pointer-events-none'

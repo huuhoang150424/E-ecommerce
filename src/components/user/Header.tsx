@@ -2,12 +2,15 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, selectIsAuthenticated } from "@/redux/authSlice";
+import { logout, selectToken, selectUser } from "@/redux/authReducer";
 import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/ui/hover-card";
 import ShinyButton from "@/components/ui/shiny-button";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-
+import { jwtDecode }  from 'jwt-decode'
+import { handleApi } from "@/service";
+import { toast } from "@/hooks/use-toast";
+import { Loading } from "../common";
 
 interface Props {
   className?: string
@@ -16,6 +19,10 @@ interface Cats {
   name?: string;
   id: number
 };
+interface TokenPayload {
+  isAdmin: Boolean;
+  user_id: String
+}
 const allCat: Cats[] = [
   {
     id: 0,
@@ -49,11 +56,14 @@ const allCatDetail: Cats[] = [
 
 function Header({ className }: Props) {
   const [catActive, setCatActive] = useState<number>(0);
+  const [loading,setLoading]=useState(false);
   const [visibleCategory, setVisibleCategory] = useState(false);
   const dropRef = useRef<HTMLDivElement | null>(null);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user:any=useSelector(selectUser)
+  const token=useSelector(selectToken)
+  const {isAdmin}=jwtDecode<TokenPayload>(token)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleClickOutside = (e: MouseEvent) => {
@@ -92,9 +102,29 @@ function Header({ className }: Props) {
     e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài
   };
 
+  const handleLogout=async()=>{
+    setLoading(true);
+    try {
+      const res=await handleApi('/auth/logout',null,'POST');
+      toast({
+        variant: 'success',
+        title: res.data.message
+      })
+      dispatch(logout()); 
+      navigate("/");
+    } catch (err:any) {
+      console.log(err)
+    } finally {
+      setLoading(true);
+    }
+  }
+
   return (
-    <div className={`${cn('w-full   sticky  ', className)}`}>
-      <div className="bg-[#dedee0] wrapper w-full py-[4px] flex justify-between items-center">
+    <div className={`${cn('w-full sticky ', className)}`}>
+      <div className="bg-[#dedee0] wrapper w-full py-[4px] flex justify-between items-center relative ">
+        {
+          loading && (<Loading className="absolute top-[100px] left-[680px]"/>)
+        }
         <div className="flex items-center">
           <i className="fa-solid fa-phone text-textColor"></i>
           <span className="text-[13px] text-textColor font-[400] ">+ 0349938737</span>
@@ -110,7 +140,7 @@ function Header({ className }: Props) {
         </div>
       </div>
       <div className="grid grid-cols-12 grid-rows-1 gap-4 items-center  py-[14px] w-full wrapper border-b-[1px] border-gray-200">
-        <Link to={"/home"} className="flex items-center gap-[8px] col-span-3 ">
+        <Link to={"/"} className="flex items-center gap-[8px] col-span-3 ">
           <i className="fa-brands fa-adversal text-[40px] text-primaryColor "></i>
           <h1 className="text-[30px] font-[800] text-textColor ">Brown<span className="text-primaryColor">Market</span></h1>
         </Link>
@@ -123,46 +153,50 @@ function Header({ className }: Props) {
           </form>
         </div>
         <div className="col-span-3 ">
-          {
-            isAuthenticated ? (
-              <div className="flex items-center gap-[15px] ">
-                <HoverCard openDelay={100} closeDelay={100}>
-                  <HoverCardTrigger className="flex items-center gap-[5px] text-textColor cursor-pointer ">
-                    <i className="fa-regular fa-user text-[16px] "></i>
-                    <span>Hữu Hoàng</span>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="flex flex-col px-0 py-[5px] ">
-                    <ShinyButton className="border-none" onClick={() => { dispatch(logout()); navigate("/") }}>Đăng xuất</ShinyButton>
-                    <ShinyButton className="border-none">Trang cá nhân</ShinyButton>
-                    <ShinyButton onClick={()=>navigate("admin/dashboard")} className="border-none">Quản trị</ShinyButton>
-                  </HoverCardContent>
-                </HoverCard>
-                <div className="flex items-center gap-[5px] text-textColor cursor-pointer ">
-                  <i className="fa-regular fa-heart text-[16px] "></i>
-                  <span>Yêu thích</span>
-                </div>
-                <div className="relative flex items-center gap-[5px] text-textColor cursor-pointer ">
-                  <i className="fa-solid fa-cart-shopping text-[16px] "></i>
-                  <span>Giỏ hàng</span>
-                  <div className="absolute top-[-54%] right-[64%] w-[20px] h-[20px] rounded-[50%] bg-redColor flex items-center justify-center ">
-                    <span className="text-[12px] font-[600] text-white">10</span>
-                  </div>
-                </div>
+          <div className="flex items-center gap-[15px] ">
+            <HoverCard openDelay={100} closeDelay={100}>
+              <HoverCardTrigger className="flex items-center gap-[5px] text-textColor cursor-pointer ">
+                <img
+                  src={user.avatar}
+                  alt="user"
+                  className="w-[30px] h-[30px] rounded-[50%] border border-gray-100 "
+                />
+                <span>{user.name}</span>
+              </HoverCardTrigger>
+              <HoverCardContent className="flex flex-col px-0 py-[5px] ">
+                <ShinyButton className="border-none" onClick={handleLogout}>Đăng xuất</ShinyButton>
+                <ShinyButton className="border-none">Trang cá nhân</ShinyButton>
+                {
+                  isAdmin && (
+                    <ShinyButton onClick={() => navigate("admin/dashboard")} className="border-none">Quản trị</ShinyButton>
+                  )
+                }
+              </HoverCardContent>
+            </HoverCard>
+            <div className="flex items-center gap-[5px] text-textColor cursor-pointer ">
+              <i className="fa-regular fa-heart text-[16px] "></i>
+              <span>Yêu thích</span>
+            </div>
+            <div className="relative flex items-center gap-[5px] text-textColor cursor-pointer ">
+              <i className="fa-solid fa-cart-shopping text-[16px] "></i>
+              <span>Giỏ hàng</span>
+              <div className="absolute top-[-54%] right-[64%] w-[20px] h-[20px] rounded-[50%] bg-redColor flex items-center justify-center ">
+                <span className="text-[12px] font-[600] text-white">10</span>
               </div>
-            ) : (<span className="text-[14px] text-textColor font-[500] cursor-pointer hover:text-gray-500 transition-all duration-300 ease-in-out ">Đăng nhập / Đăng ký</span>)
-          }
+            </div>
+          </div>
         </div>
       </div>
-      <div className="w-full  border-b-[1px] border-gray-200 py-[5px] wrapper">
+      <div className="w-full  border-b-[1px] border-gray-200 py-[5px] wrapper ">
         <div ref={dropRef} onClick={toggleDropdown} className="relative ">
-          <Button size={'square'} variant={'outline'} className="flex items-center gap-[5px] px-[14px] py-[10px] hover:bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out cursor-pointer bg-primaryColor rounded-[4px]  ">
+          <Button size={'square'} variant={'outline'} className="flex items-center  gap-[5px] px-[14px] py-[10px] hover:bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out cursor-pointer bg-primaryColor rounded-[4px]  ">
             <i className="fa-solid fa-table-list text-[26px] text-white "></i>
             <span className=" text-white text-[16px] font-[500] ">Danh mục sản phẩm</span>
             <i className="fa-solid fa-chevron-down text-white ml-[10px] "></i>
           </Button>
           {
             visibleCategory && (
-              <div style={{ pointerEvents: 'auto' }} onClick={preventPropagation} ref={categoryRef} className={`${isAnimating ? 'slide-top' : 'slide-bottom'} bg-white hover:bg-white  flex gap-[20px] absolute top-[116%] left-0 border border-gray-300 p-[15px] rounded-[6px] shadow-lg`}>
+              <div style={{ pointerEvents: 'auto' }} onClick={preventPropagation} ref={categoryRef} className={`${isAnimating ? 'slide-top' : 'slide-bottom'} bg-white hover:bg-white  flex gap-[20px] absolute top-[116%] left-[-1%] border border-gray-300 p-[15px] rounded-[6px] shadow-lg`}>
                 <div className="p-[15px] bg-[#f3f3f4] rounded-[6px] flex flex-col gap-[5px] ">
                   {
                     allCat.map((cat) => {
