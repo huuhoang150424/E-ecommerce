@@ -1,16 +1,8 @@
-
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card"
-import { Rating } from "@/components/user";
+import { Card, CardContent } from "@/components/ui/card"
+import { CardItem } from "@/components/user";
 import Banner from "@/components/user/Banner";
-import { toast } from "@/hooks/use-toast";
 import { selectIsAuthenticated, selectMessage } from "@/redux/authReducer";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -38,6 +30,25 @@ export default function HomeScreen() {
   return (
     <div className="mt-[30px] ">
       <Banner />
+      <h1 className="text-[20px] font-[700] text-textColor mt-[30px] ">Danh mục sản phẩm</h1>
+      <ul className="my-[30px] flex items-center gap-[20px] ">
+        {
+          Array(6).fill(0).map((_, index) => {
+            return (
+              <li key={index} className="group  relative p-[20px] rounded-[4px] bg-gradient-to-b from-[#c1deff] to-[#fff] overflow-hidden transition-all duration-1000 ease-linear">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#c1deff] to-[#e2f3ff]  opacity-0 transition-opacity duration-1000 ease-linear group-hover:opacity-100"></div>
+                <div className="flex flex-col items-center justify-center gap-[5px] relative bg-white px-[40px] py-[30px] rounded-[4px] shadow-extra-blur z-10">
+                  <i className="fa-solid fa-pepper-hot text-[30px] text-primaryColor"></i>
+                  <h3 className="text-[18px] mt-[5px] font-[500] text-textColor">Trái cây</h3>
+                  <span className="text-[14px] text-gray-400 font-[400]">320 sản phẩm</span>
+                </div>
+              </li>
+
+            )
+          })
+        }
+
+      </ul>
       <div className="mt-[50px] ">
         <div className="flex items-center justify-between w-full ">
           <h1 className="text-[20px] font-[700] text-textColor ">Sản phẩm đang <span className="text-primaryColor ">giảm giá</span></h1>
@@ -50,43 +61,8 @@ export default function HomeScreen() {
         {
           Array(5).fill(0).map((_, index) => {
             return (
-              <Link key={index} to={`/`}>
-                <Card className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
-                  <CardHeader className="p-0 bg-white h-[260px]  overflow-hidden relative">
-                    <div className="absolute top-[4%] right-[4%] z-10 px-[4px] py-[1px] rounded-[4px] bg-red-400 flex items-center justify-center ">
-                      <span className="text-[12px] font-[500] text-white ">-50%</span>
-                    </div>
-                    <img
-                      className=" h-full object-cover hover:scale-110 transition-all duration-300 ease-in-out "
-                      src="https://culacstudio.com/wp-content/uploads/Product-DECAAR_12862.jpg"
-                      alt="product"
-                    />
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <span className="text-[14px] text-gray-500">
-                      {/* substring(0, 50) */}
-                      Balo Ulzzang Học Sinh Chống Nước Hàn Quốc MARSOCI...</span>
-                    <div className="mt-[10px] ">
-                      <Rating
-                        countStar={4}
-                        classList="gap-[4px] "
-                        styleStar="text-[12px] "
-                      />
-
-                    </div>
-                    <div className="flex items-center justify-between ">
-                      <div className="mt-[6px] flex items-center gap-[5px] ">
-                        <h3 className="text-[15px]  text-textColor font-[500] ">200.000 vnđ</h3>
-                        <span className="line-through text-[12px] text-gray-400">20.000 vnđ </span>
-                      </div>
-                      <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">
-                        <span className="text-[12px] font-[500] text-gray-400 ">-50%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  {/* <CardFooter className="">
-                  </CardFooter> */}
-                </Card>
+              <Link key={index} to={`/productDetail/233231`}>
+                <CardItem />
               </Link>
             )
           })
@@ -126,43 +102,8 @@ export default function HomeScreen() {
         {
           Array(10).fill(0).map((_, index) => {
             return (
-              <Link key={index} to={`/`}>
-                <Card className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
-                  <CardHeader className="p-0 bg-white h-[260px]  overflow-hidden relative">
-                    <div className="absolute top-[4%] right-[4%] z-10 px-[4px] py-[1px] rounded-[4px] bg-red-400 flex items-center justify-center ">
-                      <span className="text-[12px] font-[500] text-white ">-50%</span>
-                    </div>
-                    <img
-                      className=" h-full object-cover hover:scale-110 transition-all duration-300 ease-in-out "
-                      src="https://culacstudio.com/wp-content/uploads/Product-DECAAR_12862.jpg"
-                      alt="product"
-                    />
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <span className="text-[14px] text-gray-500">
-                      {/* substring(0, 50) */}
-                      Balo Ulzzang Học Sinh Chống Nước Hàn Quốc MARSOCI...</span>
-                    <div className="mt-[10px] ">
-                      <Rating
-                        countStar={4}
-                        classList="gap-[4px] "
-                        styleStar="text-[12px] "
-                      />
-
-                    </div>
-                    <div className="flex items-center justify-between ">
-                      <div className="mt-[6px] flex items-center gap-[5px] ">
-                        <h3 className="text-[15px]  text-textColor font-[500] ">200.000 vnđ</h3>
-                        <span className="line-through text-[12px] text-gray-400">20.000 vnđ </span>
-                      </div>
-                      <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">
-                        <span className="text-[12px] font-[500] text-gray-400 ">-50%</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  {/* <CardFooter className="">
-                  </CardFooter> */}
-                </Card>
+              <Link key={index} to={`/productDetail/233231`}>
+                <CardItem />
               </Link>
             )
           })

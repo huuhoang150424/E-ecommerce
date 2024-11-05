@@ -1,57 +1,48 @@
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import {Card,CardContent, CardHeader} from "@/components/ui/card"
+import Rating from "../Rating"
 
 export default function CardItem() {
   return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+    <Card className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
+      <CardHeader className="p-0 bg-white h-[260px]  overflow-hidden relative group">
+        <ul className="absolute z-10 bottom-[5%]  mx-auto w-full flex gap-[10px]  justify-center items-center opacity-0 -translate-y-[-10px] transition-all duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
+          <li className="px-[8px] py-[3px] rounded-[4px]  bg-white border border-gray-200  ">
+            <i className="fa-regular fa-heart text-gray-400 "></i>
+          </li>
+          <li className="px-[8px] py-[3px] rounded-[4px]  bg-white border border-gray-200  ">
+            <i className="fa-solid fa-cart-shopping text-gray-400"></i>
+          </li>
+        </ul>
+        <div className="absolute top-[4%] right-[4%] z-10 px-[4px] py-[1px] rounded-[4px] bg-red-400 flex items-center justify-center ">
+          <span className="text-[12px] font-[500] text-white ">-50%</span>
+        </div>
+        <img
+          className=" h-full object-cover group-hover:scale-110 transition-all duration-500 ease-in-out "
+          src="https://culacstudio.com/wp-content/uploads/Product-DECAAR_12862.jpg"
+          alt="product"
+        />
       </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="framework">Framework</Label>
-              <Select>
-                <SelectTrigger id="framework">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent position="popper">
-                  <SelectItem value="next">Next.js</SelectItem>
-                  <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                  <SelectItem value="astro">Astro</SelectItem>
-                  <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      <CardContent className="p-4">
+        <span className="text-[14px] text-gray-500">
+          {/* substring(0, 50) */}
+          Balo Ulzzang Học Sinh Chống Nước Hàn Quốc MARSOCI...</span>
+        <div className="mt-[10px] ">
+          <Rating
+            countStar={4}
+            classList="gap-[4px] "
+            styleStar="text-[12px] "
+          />
+        </div>
+        <div className="flex items-center justify-between ">
+          <div className="mt-[6px] flex items-center gap-[5px] ">
+            <h3 className="text-[15px]  text-textColor font-[500] ">200.000 vnđ</h3>
+            <span className="line-through text-[12px] text-gray-400">20.000 vnđ </span>
           </div>
-        </form>
+          <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">
+            <span className="text-[12px] font-[500] text-gray-400 ">-50%</span>
+          </div>
+        </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
     </Card>
   )
 }

@@ -1,6 +1,6 @@
 
 
-export default function CheckOutScreen() {
+export default function FavouriteScreen() {
   return (
     <div className="">
 

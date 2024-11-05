@@ -146,10 +146,10 @@ function Header({ className }: Props) {
         </Link>
         <div className="col-span-6 ">
           <form action="" method="POST" className="border border-primaryColor rounded-[8px] overflow-hidden w-[95%] flex items-center">
-            <Input className="outline-none text-textColor px-[16px] py-[8px] border-none" placeholder="Search..." />
-            <div className="px-[20px] py-[11px] cursor-pointer bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out flex items-center justify-center">
+            <Input className="outline-none text-textColor px-[16px] py-[8px] border-none" placeholder="Tìm kiếm..." />
+            <Link to={'/searchScreen'} className="px-[20px] py-[11px] cursor-pointer bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out flex items-center justify-center">
               <i className="fa-solid fa-magnifying-glass text-white text-[16px] "></i>
-            </div>
+            </Link>
           </form>
         </div>
         <div className="col-span-3 ">
@@ -166,6 +166,7 @@ function Header({ className }: Props) {
               <HoverCardContent className="flex flex-col px-0 py-[5px] ">
                 <ShinyButton className="border-none" onClick={handleLogout}>Đăng xuất</ShinyButton>
                 <ShinyButton className="border-none">Trang cá nhân</ShinyButton>
+                <ShinyButton className="border-none" onClick={()=>navigate("/orderScreen")}>Đơn hàng</ShinyButton>
                 {
                   isAdmin && (
                     <ShinyButton onClick={() => navigate("admin/dashboard")} className="border-none">Quản trị</ShinyButton>
@@ -173,17 +174,17 @@ function Header({ className }: Props) {
                 }
               </HoverCardContent>
             </HoverCard>
-            <div className="flex items-center gap-[5px] text-textColor cursor-pointer ">
+            <Link to={'/favouriteScreen'} className="flex items-center gap-[5px] text-textColor cursor-pointer ">
               <i className="fa-regular fa-heart text-[16px] "></i>
               <span>Yêu thích</span>
-            </div>
-            <div className="relative flex items-center gap-[5px] text-textColor cursor-pointer ">
+            </Link>
+            <Link to={'/cartScreen'} className="relative flex items-center gap-[5px] text-textColor cursor-pointer ">
               <i className="fa-solid fa-cart-shopping text-[16px] "></i>
               <span>Giỏ hàng</span>
               <div className="absolute top-[-54%] right-[64%] w-[20px] h-[20px] rounded-[50%] bg-redColor flex items-center justify-center ">
                 <span className="text-[12px] font-[600] text-white">10</span>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>
