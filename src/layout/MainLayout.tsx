@@ -23,7 +23,6 @@ export default function MainLayout({ children }: Props) {
       setTimeout(() => setHiddenScroll(false), 300);
     }
   };
-  console.log(performance)
   const scrollToTop = (duration = 2000) => {
     const start = window.scrollY;
     const startTime = performance.now();

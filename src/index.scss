@@ -200,3 +200,41 @@
 .swiper-pagination-bullet-active {
   @apply bg-primaryColor opacity-100; /* Màu nền cho bullet active */
 }
+
+
+/*custom style CKEditor */
+
+/* Khung chỉnh sửa */
+.ck-editor__editable_inline,
+.ck.ck-editor__main > .ck-editor__editable:not(.ck-focused),
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+  @apply min-h-[200px] rounded-b-[6px]  text-textColor border-[0.6px] border-gray-200;
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+  @apply shadow-none;
+}
+
+/* Thanh công cụ */
+.ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content,
+.ck-toolbar {
+  @apply bg-gray-100 border-gray-200 rounded-[6px];
+}
+
+.ck-toolbar {
+  @apply flex gap-2 justify-start border-b;
+}
+
+.ck-toolbar__items > button {
+  @apply text-gray-600 hover:bg-gray-200 rounded transition;
+}
+
+/* Văn bản */
+.ck-content {
+  @apply text-textColor font-sans leading-relaxed;
+}
+
+/* Tooltip CKEditor */
+.ck.ck-balloon-panel.ck-powered-by-balloon {
+  @apply hidden;
+}

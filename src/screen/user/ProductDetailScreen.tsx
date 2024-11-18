@@ -5,9 +5,11 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import useScrollToTopOnMount from "@/hooks/useScrollToTopOnMount";
 
 
 export default function ProductDetailScreen() {
+  useScrollToTopOnMount();
   const [counter, setCounter] = useState(0);
   const [favourite, setFavourite] = useState(false);
 
@@ -145,7 +147,7 @@ export default function ProductDetailScreen() {
             </div>
           </div>
         </div>
-        <div className="col-span-3 sticky top-[30px] border border-gray-200 rounded-[4px] h-[420px]  overflow-hidden p-[20px] ">
+        <div className="col-span-3 sticky top-[30px] border border-gray-200 rounded-[4px] self-start overflow-hidden p-[20px] ">
           <div className="">
             <h3 className="text-[18px] font-[600] text-textColor ">Loại</h3>
             <ul className="flex gap-[10px] mt-[10px] ">

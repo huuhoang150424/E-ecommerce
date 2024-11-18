@@ -2,8 +2,8 @@
 
 export default function OrderScreen() {
   return (
-    <div className="">
-
+    <div className="my-[50px] ">
+      
     </div>
   )
 }

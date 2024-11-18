@@ -1,6 +1,7 @@
-import { CartScreen, CheckOutScreen, FavouriteScreen, HomeScreen, NotFoundScreen, OrderScreen, ProductDetailScreen, SearchScreen } from '@/screen/user';
+import { CartScreen, CheckOutScreen, HomeScreen, NotFoundScreen, ProductDetailScreen, SearchScreen } from '@/screen/user';
 import { Route, Routes } from 'react-router-dom';
-import { MainLayout } from '@/layout';
+import { MainLayout} from '@/layout';
+import ProfileRouter from './ProfileRouter';
 
 export default function MainRouter() {
   return (
@@ -11,8 +12,7 @@ export default function MainRouter() {
         <Route path='/cartScreen' element={<CartScreen />} />
         <Route path='/checkOutScreen' element={<CheckOutScreen />} />
         <Route path='/searchScreen' element={<SearchScreen />} />
-        <Route path='/orderScreen' element={<OrderScreen />} />
-        <Route path='/favouriteScreen' element={<FavouriteScreen />} />
+        <Route path='/*' element={<ProfileRouter />} />
         <Route path='*' element={<NotFoundScreen />} />
       </Routes>
     </MainLayout>

@@ -16,9 +16,9 @@ export default function AdminLayout({ children }: Props) {
         <SideBar
           className="" 
         />
-        <div className={`w-full flex flex-col `}>
+        <div className={`w-full flex flex-col  `}>
           <Header />
-          <main className="px-[25px] py-[30px] h-[100%] ">
+          <main className="px-[25px] py-[30px] h-[100%]  ">
             {children}
           </main>
         </div>

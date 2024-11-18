@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { CardItem } from "@/components/user";
 import Banner from "@/components/user/Banner";
 import { selectIsAuthenticated, selectMessage } from "@/redux/authReducer";
+import { handleApi } from "@/service";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -12,6 +14,10 @@ export default function HomeScreen() {
   const navigate = useNavigate();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const message = useSelector(selectMessage)
+  const [allCat,setAllCat]=useState([]);
+
+
+
   // useEffect(() => {
   //   const showMessageLogin = localStorage.getItem('showMessageLogin')
   //   if (message && isAuthenticated && !showMessageLogin) {

@@ -1,88 +1,48 @@
-import { cn } from "@/lib/utils"
-
+import { cn } from "@/lib/utils";
 interface Props {
-  className: string
+  className: string;
+  data?: any;
+  nameCol?: string[];
+  renderRow?: any;
+  handleDelete?: any;
+  handleUpdate?: any
 }
-
-
-export default function Tables({className}:Props) {
+export default function Tables({ className, data, nameCol,renderRow,handleDelete ,handleUpdate}: Props) {
   return (
-
-    <div className={`${cn('relative overflow-x-auto shadow-md sm:rounded-lg z-[-1]' ,className)} `}>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-              </div>
+    <div className={`${cn('overflow-x-auto shadow-md rounded-lg w-full', className)}`}>
+      <table className="w-full text-sm text-gray-500 table-fixed">
+        <thead className="text-xs bg-gray-200 text-gray-700 uppercase">
+          <tr className="flex">
+            <th className="w-12 py-4 px-2 flex items-center justify-center">
+              <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 cursor-pointer" />
             </th>
-            <th scope="col" className="px-6 py-3">
-              Tên
+            <th className="w-full flex items-center">
+              {nameCol?.map((name, index) => (
+                <div key={index} className="flex-1 py-4 text-left">
+                  <span className="ml-[20px] ">{name}</span>
+                </div>
+              ))}
             </th>
-            <th scope="col" className="px-6 py-3">
-              Ảnh
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Danh mục
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Số lượng
-            </th>
-            <th scope="col" className="px-6 py-3">
-              giá
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Price
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Weight
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Hành động
+            <th className="w-[120px] flex items-center justify-center  ">
+              <span className="text-center "> Hành động</span>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td className="w-4 p-4">
-              <div className="flex items-center">
-                <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-              </div>
-            </td>
-            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              Apple MacBook Pro 17"
-            </th>
-            <td className="px-6 py-4">
-              Silver
-            </td>
-            <td className="px-6 py-4">
-              Laptop
-            </td>
-            <td className="px-6 py-4">
-              Yes
-            </td>
-            <td className="px-6 py-4">
-              Yes
-            </td>
-            <td className="px-6 py-4">
-              $2999
-            </td>
-            <td className="px-6 py-4">
-              3.0 lb.
-            </td>
-            <td className="flex items-center px-6 py-4">
-              <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-              <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</a>
-            </td>
-          </tr>
-          
+          {data?.map((row:any, index:number) => (
+            <tr key={index} className="flex hover:bg-gray-100 transition-all duration-300 ease-in-out border-gray-200 border-b-[1px]">
+              <td className="w-12 py-3 px-2 flex items-center justify-center">
+                <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 cursor-pointer " />
+              </td>
+              {renderRow(row)}
+              <td className="w-[120px] flex items-center justify-center ">
+                <span onClick={()=>handleUpdate(row)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</span>
+                <span onClick={()=>handleDelete(row)} className="font-medium text-red-600 dark:text-red-500 hover:underline ml-3 cursor-pointer ">Remove</span>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
-
-
-  )
+  );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import Router from './router/Router';
 import { Toaster } from './components/ui/toaster';
 
+
 function App() {
   const cursorMouse = useRef<HTMLDivElement | null>(null);
   const smallDot = useRef<HTMLDivElement | null>(null); 

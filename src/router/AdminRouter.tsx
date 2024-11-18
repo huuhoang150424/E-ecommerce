@@ -1,6 +1,6 @@
 import { AdminLayout } from "@/layout";
 import { selectIsAuthenticated } from "@/redux/authReducer";
-import { CategoryScreen, CreateProductScreen, DashBoardScreen, ProductScreen } from "@/screen/admin";
+import { CategoryScreen, CreateProductScreen, DashBoardScreen, ProductScreen, UserScreen, WarehouseScreen } from "@/screen/admin";
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -19,6 +19,8 @@ export default function AdminRouter() {
         <Route path="/product" element={<ProductScreen />} />
         <Route path="/createProduct" element={<CreateProductScreen />} />
         <Route path="/category" element={<CategoryScreen />} />
+        <Route path="/users" element={<UserScreen />} />
+        <Route path="/warehouse" element={<WarehouseScreen />} />
       </Routes>
     </AdminLayout>
   );

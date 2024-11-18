@@ -32,7 +32,10 @@ const authSlice = createSlice({
   reducers: {
     logout: () => {
       return initialState
-    }
+    },
+    updateToken: (state,action)=>{
+      state.token=action.payload.token
+  }
   },
   extraReducers: (builder) => {
     builder
@@ -54,7 +57,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout,updateToken } = authSlice.actions;
 
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
 export const selectToken = (state: { auth: AuthState }) => state.auth.token;

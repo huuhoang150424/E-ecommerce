@@ -9,11 +9,15 @@ import { axiosClient } from "./axiosClient"
  * @returns 
  */
 
-export const handleApi=async (url: string,data?:any, method?: string | 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', params ?: any)=>{
-  return axiosClient(url,{
-    method: method ?? 'GET',
+export const handleApi = async (
+  url: string,
+  data?: any,
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
+  params?: any
+) => {
+  return axiosClient(url, {
+    method,
     data,
-    params
-  }
-  )
-}
+    params,
+  });
+};

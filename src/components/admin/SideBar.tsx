@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/ui/hover-card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { navIcon } from "@/constant/pathName";
+
 
 
 interface Props {
@@ -27,222 +29,39 @@ export default function SideBar({ className }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <nav className={cn(`${isCollapsed ? "w-[60px]" : "w-[300px]"}  h-[100vh] sticky top-0 left-0  transition-all duration-500 ease-in-out`, className)}>
-      <ScrollArea className={`border-r-[1px] h-[100%] border-gray-300 dark:border-borderDarkMode   `}>
-        <Button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          variant="default"
-          size="square"
-          className={`${isCollapsed ? 'right-[-25%]' : 'right-[-6%]'} bg-textColor absolute top-[50%] transition-all duration-500 ease-in-out z-50 rounded-full flex items-center justify-center px-[11px] py-[8px]`}
-        >
-          <i
-            className={`fa-solid fa-chevron-right transition-transform duration-500 ${isCollapsed ? "rotate-180" : ""
-              }`}
-          ></i>
-        </Button>
-        <div className="">
-          <div className="w-full z-1 overflow-hidden flex items-center justify-center px-[20px] py-[15px] gap-[5px] ">
-            <i className="fa-brands fa-adversal text-[35px] text-primaryColor  dark:text-white "></i>
-            {
-              !isCollapsed && (
-                <div className={`${!isCollapsed ? '' : ''} transition-all duration-1000 ease-in-out`}>
-                  <h1 className="text-[25px] font-[800] text-textColor ">Brown<span className=" text-primaryColor dark:text-white ">Market</span></h1>
-                </div>
-              )
-            }
-          </div>
-          <div className="w-full h-[1px] bg-gray-200 mb-[5px] dark:bg-borderDarkMode"></div>
-          <NavLinkIcon isCollapsed={isCollapsed} />
+    <nav className={cn(`${isCollapsed ? "w-[60px]" : "w-[250px]"}  h-[100vh] sticky top-0 left-0  transition-all duration-500 ease-in-out`,className)}>
+    <ScrollArea className={`border-r-[1px] h-[100%] border-gray-300 dark:border-borderDarkMode   `}>
+      <Button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        variant="default"
+        size="square"
+        className={`${isCollapsed ? 'right-[-25%]' : 'right-[-6%]'} bg-textColor absolute top-[50%] transition-all duration-500 ease-in-out z-50 rounded-full flex items-center justify-center px-[11px] py-[8px]`}
+      >
+        <i
+          className={`fa-solid fa-chevron-right transition-transform duration-500 ${isCollapsed ? "rotate-180" : ""
+            }`}
+        ></i>
+      </Button>
+      <div className="">
+        <div className="w-full z-1 overflow-hidden flex items-center justify-center px-[20px] py-[15px] gap-[5px] ">
+          <i className="fa-brands fa-adversal text-[35px] text-primaryColor  dark:text-white "></i>
+          {
+            !isCollapsed && (
+              <div className={`${!isCollapsed ? '' : ''} transition-all duration-1000 ease-in-out`}>
+                <h1 className="text-[25px] font-[800] text-textColor ">Brown<span className=" text-primaryColor dark:text-white ">Market</span></h1>
+              </div>
+            )
+          }
         </div>
-      </ScrollArea>
-    </nav>
+        <div className="w-full h-[1px] bg-gray-200 mb-[5px] dark:bg-borderDarkMode"></div>
+        <NavLinkIcon isCollapsed={isCollapsed} />
+      </div>
+    </ScrollArea>
+  </nav>
   );
 }
 
-interface navIcon {
-  id: number;
-  icon: string;
-  label: string;
-  navigate: string;
-  isAccordion: boolean;
-  children: navIcon[]
-}
-const navIcon: navIcon[] = [
-  {
-    id: 0,
-    icon: "fa-solid fa-gauge",
-    label: 'Tổng quan',
-    navigate: '/admin/dashboard',
-    isAccordion: false,
-    children: []
-  },
-  {
-    id: 1,
-    icon: "fa-brands fa-product-hunt",
-    label: 'Sản phẩm',
-    navigate: '/admin/product',
-    isAccordion: true,
-    children: [
-      {
-        id: 1.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 1.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 1.3,
-        icon: "fa-solid fa-wand-magic-sparkles",
-        label: 'Đánh giá sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
-  {
-    id: 2,
-    icon: "fa-solid fa-cart-shopping",
-    label: 'Đơn hàng',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 2.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 2.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
-  {
-    id: 3,
-    icon: "fa-regular fa-newspaper",
-    label: 'Tin tức',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 3.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 3.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
-  {
-    id: 4,
-    icon: "fa-solid fa-warehouse",
-    label: 'Kho',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 4.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 4.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
-  {
-    id: 5,
-    icon: "fa-solid fa-users",
-    label: 'Người dùng',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 5.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 5.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
-  {
-    id: 6,
-    icon: "fa-brands fa-salesforce",
-    label: 'Khuyến mãi',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 6.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 6.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
-  {
-    id: 7,
-    icon: "fa-solid fa-layer-group",
-    label: 'Danh mục sản phẩm',
-    navigate: '/admin/category',
-    isAccordion: false,
-    children: []
-  }
-];
+
 
 interface PropsNavLink {
   isCollapsed: boolean;
@@ -250,16 +69,30 @@ interface PropsNavLink {
 }
 
 const NavLinkIcon = memo(({ isCollapsed }: PropsNavLink) => {
-  const [activeNavLink, setActiveNavLink] = useState(0);
+  
+  const [activeNavLink, setActiveNavLink] = useState(() => {
+    const navLink=localStorage.getItem("navId");
+    return navLink !==null ? parseFloat(navLink):0
+  });
+
+  const [openValues, setOpenValues] = useState<string[]>(() => {
+    const storedValues = localStorage.getItem("accordionOpenValues");
+    return storedValues ? JSON.parse(storedValues) : [];
+  });
+
   const navigate = useNavigate();
 
   const handleClick = (nav: string, id: number) => {
+    localStorage.setItem("navId",id.toString());
     navigate(nav);
     setActiveNavLink(id);
   };
 
+  useEffect(() => {
+    localStorage.setItem("accordionOpenValues", JSON.stringify(openValues));
+  }, [openValues]);
+
   const renderNavItems = (navItems: navIcon[],level:number=0) => {
-    //console.log("level" , level)
     return navItems.map(nav => (
       <div key={nav.id}>
         {isCollapsed ? (
@@ -282,7 +115,13 @@ const NavLinkIcon = memo(({ isCollapsed }: PropsNavLink) => {
           </div>
         ) : (
           nav.isAccordion ? (
-            <Accordion type="single" collapsible>
+            <Accordion 
+              type="multiple"
+              value={openValues}
+              onValueChange={(values) => {
+                setOpenValues(values);
+              }}
+            >
               <AccordionItem value={`item-${nav.id}`} className="border-transparent">
                 <AccordionTrigger className={` w-full hover:bg-accent transition-all duration-300 ease-in-out dark:hover:bg-borderDarkMode flex justify-between items-center gap-[10px] rounded-[6px] p-[10px] shadow-none text-black hover:border-none dark:text-white`}>
                   <div className="flex items-center gap-[10px] ">

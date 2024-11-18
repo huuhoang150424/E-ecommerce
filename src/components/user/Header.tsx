@@ -7,10 +7,11 @@ import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/ui/
 import ShinyButton from "@/components/ui/shiny-button";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-import { jwtDecode }  from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { handleApi } from "@/service";
 import { toast } from "@/hooks/use-toast";
 import { Loading } from "../common";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface Props {
   className?: string
@@ -56,14 +57,15 @@ const allCatDetail: Cats[] = [
 
 function Header({ className }: Props) {
   const [catActive, setCatActive] = useState<number>(0);
-  const [loading,setLoading]=useState(false);
+  const [loading, setLoading] = useState(false);
   const [visibleCategory, setVisibleCategory] = useState(false);
+  const [suggestSearch, setSuggestSearch] = useState(false);
   const dropRef = useRef<HTMLDivElement | null>(null);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const user:any=useSelector(selectUser)
-  const token=useSelector(selectToken)
-  const {isAdmin}=jwtDecode<TokenPayload>(token)
+  const user: any = useSelector(selectUser)
+  const token = useSelector(selectToken)
+  const { isAdmin } = jwtDecode<TokenPayload>(token)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleClickOutside = (e: MouseEvent) => {
@@ -102,17 +104,17 @@ function Header({ className }: Props) {
     e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài
   };
 
-  const handleLogout=async()=>{
+  const handleLogout = async () => {
     setLoading(true);
     try {
-      const res=await handleApi('/auth/logout',null,'POST');
+      const res = await handleApi('/auth/logout', null, 'POST');
       toast({
         variant: 'success',
         title: res.data.message
       })
-      dispatch(logout()); 
+      dispatch(logout());
       navigate("/");
-    } catch (err:any) {
+    } catch (err: any) {
       console.log(err)
     } finally {
       setLoading(true);
@@ -123,7 +125,7 @@ function Header({ className }: Props) {
     <div className={`${cn('w-full sticky ', className)}`}>
       <div className="bg-[#dedee0] wrapper w-full py-[4px] flex justify-between items-center relative ">
         {
-          loading && (<Loading className="absolute top-[100px] left-[680px]"/>)
+          loading && (<Loading className="absolute top-[100px] left-[680px]" />)
         }
         <div className="flex items-center">
           <i className="fa-solid fa-phone text-textColor"></i>
@@ -144,12 +146,32 @@ function Header({ className }: Props) {
           <i className="fa-brands fa-adversal text-[40px] text-primaryColor "></i>
           <h1 className="text-[30px] font-[800] text-textColor ">Brown<span className="text-primaryColor">Market</span></h1>
         </Link>
-        <div className="col-span-6 ">
-          <form action="" method="POST" className="border border-primaryColor rounded-[8px] overflow-hidden w-[95%] flex items-center">
-            <Input className="outline-none text-textColor px-[16px] py-[8px] border-none" placeholder="Tìm kiếm..." />
+        <div className="col-span-6 relative">
+          <form action="" method="POST" className="border border-primaryColor rounded-[8px] overflow-hidden w-[95%] flex items-center  ">
+            <Input onBlur={() => setSuggestSearch(false)} onFocus={() => setSuggestSearch(true)} className="outline-none text-textColor px-[16px] py-[8px] border-none" placeholder="Tìm kiếm..." />
             <Link to={'/searchScreen'} className="px-[20px] py-[11px] cursor-pointer bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out flex items-center justify-center">
               <i className="fa-solid fa-magnifying-glass text-white text-[16px] "></i>
             </Link>
+            {
+              suggestSearch && (
+                <ul className="absolute rounded-[4px] border border-gray-200 shadow top-[110%] w-[95%]  bg-white z-50 flex flex-col gap-[4px] ">
+                  <ScrollArea className="h-[260px]">
+                    {
+                      Array(12).fill(0).map((_, index) => {
+                        return (
+                          <li key={index} className=" px-[14px] py-[6px]  cursor-pointer hover:bg-gray-100 transition-all duration-300 ease-linear ">
+                            <span className="text-[14px] text-textColor font-[500] ">
+                              Từ khóa tìm kiếm
+                            </span>
+                          </li>
+                        )
+                      })
+                    }
+                  </ScrollArea>
+
+                </ul>
+              )
+            }
           </form>
         </div>
         <div className="col-span-3 ">
@@ -161,15 +183,15 @@ function Header({ className }: Props) {
                   alt="user"
                   className="w-[30px] h-[30px] rounded-[50%] border border-gray-100 "
                 />
-                <span>{user.name}</span>
+                <span>{ user.name.length>8?` ${user.name.substring(0,8)}..`:`${user.name}`  }</span>
               </HoverCardTrigger>
               <HoverCardContent className="flex flex-col px-0 py-[5px] ">
                 <ShinyButton className="border-none" onClick={handleLogout}>Đăng xuất</ShinyButton>
-                <ShinyButton className="border-none">Trang cá nhân</ShinyButton>
-                <ShinyButton className="border-none" onClick={()=>navigate("/orderScreen")}>Đơn hàng</ShinyButton>
+                <ShinyButton onClick={()=>navigate("/profileScreen")} className="border-none">Trang cá nhân</ShinyButton>
+                <ShinyButton   className="border-none" onClick={() => navigate("/orderScreen")}>Đơn hàng</ShinyButton>
                 {
                   isAdmin && (
-                    <ShinyButton onClick={() => navigate("admin/dashboard")} className="border-none">Quản trị</ShinyButton>
+                    <ShinyButton onClick={() => {navigate("admin/dashboard");localStorage.setItem("navId",'0')}} className="border-none">Quản trị</ShinyButton>
                   )
                 }
               </HoverCardContent>
@@ -197,7 +219,7 @@ function Header({ className }: Props) {
           </Button>
           {
             visibleCategory && (
-              <div style={{ pointerEvents: 'auto' }} onClick={preventPropagation} ref={categoryRef} className={`${isAnimating ? 'slide-top' : 'slide-bottom'} bg-white hover:bg-white  flex gap-[20px] absolute top-[116%] left-[-1%] border border-gray-300 p-[15px] rounded-[6px] shadow-lg`}>
+              <div style={{ pointerEvents: 'auto' }} onClick={preventPropagation} ref={categoryRef} className={`${isAnimating ? 'slide-top' : 'slide-bottom'} z-50 bg-white hover:bg-white  flex gap-[20px] absolute top-[116%] left-[-1%] border border-gray-300 p-[15px] rounded-[6px] shadow-lg`}>
                 <div className="p-[15px] bg-[#f3f3f4] rounded-[6px] flex flex-col gap-[5px] ">
                   {
                     allCat.map((cat) => {

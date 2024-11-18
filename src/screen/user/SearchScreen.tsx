@@ -4,17 +4,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
-
+import { useSearchParams } from "react-router-dom";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { CardItem } from "@/components/user";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, } from "@/components/ui/pagination"
 
 export default function SearchScreen() {
   const [toPrice, setToPrice] = useState(0);
   const [fromPrice, setFromPrice] = useState(100);
-
+  const searchParam = useSearchParams();
 
   return (
     <div className="my-[50px]">
       <div className="grid grid-cols-12 grid-rows-1 gap-6 ">
-        <div className="col-span-3  border border-gray-200 rounded-[4px] overflow-hidden  px-[20px] pb-[20px] ">
+        <div className="col-span-3  border border-gray-200 rounded-[4px] overflow-hidden  px-[20px] pb-[20px] self-start sticky top-[30px] ">
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem className="border-none" value="item-1">
               <AccordionTrigger className="w-full  py-[12px] border-b-[1px] border-gray-200 text-[17px] font-[600] text-textColor">Danh mục</AccordionTrigger>
@@ -91,9 +95,81 @@ export default function SearchScreen() {
           </div>
         </div>
         <div className="col-span-9   ">
-          <div className="border border-gray-200 rounded-[4px] overflow-hidden ">
-
+          <div className="border border-gray-200 rounded-[4px] pl-[20px] py-[6px] flex items-center justify-between ">
+            <div className="flex items-center gap-[10px] ">
+              <h2 className="text-[15px] font-[500] text-textColor ">Kết quả tìm kiếm cho từ khóa: </h2>
+              <span className="text-[15px] text-primaryColor font-[500] ">Đồ ăn</span>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={'outline'} className=" outline-none border-none shadow-none hover:bg-transparent mr-[5px] flex items-center gap-[20px]   ">
+                  <span className="text-[16px] text-textColor">Lọc</span>
+                  <i className="fa-solid fa-chevron-down text-[16px] text-textColor"></i>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="" align='end'>
+                <ScrollArea className=" rounded-md h-[120px] ">
+                  <ul className="p-[5px] flex flex-col gap-[4px] ">
+                    <li className=" px-[8px] py-[4px] flex items-center justify-center cursor-pointer bg-gray-100 rounded-[4px] transition-all duration-300 ease-in-out ">
+                      <span className="text-[15px] font-[400] text-textColor ">Thời gian</span>
+                    </li>
+                    <li className=" px-[8px] py-[4px] flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-[4px] transition-all duration-300 ease-in-out ">
+                      <span className="text-[15px] font-[400] text-textColor ">Đã ra mắt</span>
+                    </li>
+                    <li className=" px-[8px] py-[4px] flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-[4px] transition-all duration-300 ease-in-out ">
+                      <span className="text-[15px] font-[400] text-textColor ">Đã ra mắt</span>
+                    </li>
+                    <li className=" px-[8px] py-[4px] flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-[4px] transition-all duration-300 ease-in-out ">
+                      <span className="text-[15px] font-[400] text-textColor ">Đã ra mắt</span>
+                    </li>
+                  </ul>
+                </ScrollArea>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
+          <div className="my-[15px] flex items-center justify-between ">
+            <h2 className="text-[15px] text-textColor">Các từ khóa liên quan</h2>
+            <ul className="flex items-center gap-[15px] ">
+              {
+                Array(3).fill(0).map((_, index) => {
+                  return (
+                    <li key={index} className="flex items-center gap-[5px]  border border-gray-200 rounded-[4px] px-[12px] py-[2px] cursor-pointer ">
+                      <span className="text-[14px] text-textColor ">Đồ ăn sấy khô</span>
+                      <i className="fa-solid fa-xmark text-[12px] text-red-400 "></i>
+                    </li>
+                  )
+                })
+              }
+              <li className="flex items-center gap-[5px]  border border-gray-200 rounded-[4px] px-[12px] py-[2px] bg-primaryColor cursor-pointer ">
+                <span className="text-[14px] text-white ">Xóa tất cả</span>
+              </li>
+            </ul>
+          </div>
+          <div className="grid grid-cols-4 grid-rows-5 gap-4 mt-[40px] ">
+            {
+              Array(20).fill(0).map((_, index) => {
+                return (
+                  <CardItem key={index} />
+                )
+              })
+            }
+          </div>
+        </div>
+      </div>
+      <div className="my-[50px] ">
+        <div className="flex justify-center ">
+          <Button className="min-w-9 rounded-full border border-gray-200 bg-white text-textColor  py-2 px-3.5 text-center text-sm transition-all duration-300 ease-linear  hover:shadow-lg focus:bg-primaryColor focus:shadow-none active:bg-primaryColor active:text-white focus:text-white hover:bg-gray-100 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
+            Prev
+          </Button>
+          <Button className="min-w-9 rounded-full border border-gray-200 bg-white text-textColor  py-2 px-3.5 text-center text-sm transition-all duration-300 ease-linear  hover:shadow-lg focus:bg-primaryColor focus:shadow-none active:bg-primaryColor active:text-white focus:text-white hover:bg-gray-100 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
+            1
+          </Button>
+          <Button className="min-w-9 rounded-full border border-gray-200 bg-white text-textColor  py-2 px-3.5 text-center text-sm transition-all duration-300 ease-linear  hover:shadow-lg focus:bg-primaryColor focus:shadow-none active:bg-primaryColor active:text-white focus:text-white hover:bg-gray-100 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
+            2
+          </Button>
+          <Button className="min-w-9 rounded-full border border-gray-200 bg-white text-textColor  py-2 px-3.5 text-center text-sm transition-all duration-300 ease-linear  hover:shadow-lg focus:bg-primaryColor focus:shadow-none active:bg-primaryColor active:text-white focus:text-white hover:bg-gray-100 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
+            Next
+          </Button>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import CheckOutScreen from './CheckOutScreen';
 import NotFoundScreen from './NotFoundScreen';
 import OrderScreen from './OrderScreen';
 import FavouriteScreen from './FavouriteScreen';
+import NotificationScreen from './NotificationScreen';
 
 export { 
   HomeScreen ,
@@ -17,5 +18,6 @@ export {
   SearchScreen,
   CheckOutScreen,
   OrderScreen,
-  FavouriteScreen
+  FavouriteScreen,
+  NotificationScreen
 };
