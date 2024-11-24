@@ -5,6 +5,9 @@ import CreateProductScreen from './Products/CreateProductScreen';
 import ReviewScreen from './Products/ReviewScreen';
 import UserScreen from './User/UserScreen';
 import WarehouseScreen from './Warehouse/WarehouseScreen';
+import AttributesScreen from './Attributes/AttributesScreen';
+import OrderScreen from './Order/OrderScreen';
+
 
 export {
   DashBoardScreen,
@@ -13,5 +16,7 @@ export {
   CreateProductScreen,
   ReviewScreen,
   UserScreen,
-  WarehouseScreen
+  WarehouseScreen,
+  AttributesScreen,
+  OrderScreen
 }

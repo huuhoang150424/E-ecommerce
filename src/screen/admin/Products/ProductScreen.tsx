@@ -22,7 +22,9 @@ export default function ProductScreen() {
       </div>
 
       <div className=" ">
-        <Tables className="mb-[100px] border border-gray-200 shadow-none"/>
+        <Tables 
+          className="mb-[100px] border border-gray-200 shadow-none"
+        />
       </div>
     </div>
   )

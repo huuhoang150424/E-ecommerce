@@ -1,53 +1,52 @@
+import NoResult from "@/components/admin/NoResult";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import NoResult from "@/components/admin/NoResult";
+import Modal from "./modal";
+import { useQuery } from "@tanstack/react-query";
+import { getAllAttribute } from "./api";
 import { Loading } from "@/components/common";
 import { Tables } from "@/components/admin";
-import Modal from "./modal";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getAllUser } from "./api";
-import useScrollToTopOnMount from "@/hooks/useScrollToTopOnMount";
 
-export default function UserScreen() {
-  useScrollToTopOnMount();
+export default function AttributesScreen() {
   const [typeModal, setTypeModal] = useState('create');
   const [closeDialog, setCloseDialog] = useState(false);
-  const [user, setUser] = useState(false);
+  const [attribute, setAttribute] = useState(null)
   const { isLoading, data } = useQuery({
-    queryKey: ['user'],
-    queryFn: getAllUser
+    queryKey: ['attribute'],
+    queryFn: getAllAttribute
   });
 
-  const handleDelete=(user:any)=>{
+
+  const handleDelete = (attribute: any) => {
     setTypeModal('delete');
     setCloseDialog(true);
-    setUser(user);
+    setAttribute(attribute);
   }
 
-  const handleUpdate=(user:any)=>{
+  const handleUpdate = (attribute: any) => {
     setTypeModal('update');
     setCloseDialog(true);
-    setUser(user);
+    setAttribute(attribute);
   }
 
   return (
-    <div className="">
-      <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách người dùng</h1>
-
+    <div>
+      <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách thuộc tính</h1>
       <div className="flex items-center mb-[15px] justify-between ">
         <div className="flex items-center gap-[15px] ">
+
           <Input
             className="w-[240px] px-[14px] py-[6px] outline-none text-textColor text-[14px] font-[400]  "
-            placeholder="tìm kiếm người dùng..."
+            placeholder="tìm kiếm thuộc tính..."
           />
-          <Button onClick={() => { setTypeModal('create'); setCloseDialog(true) }} size={'square'} variant={'outline'} className="px-[14px] py-[6px] outline-none text-textColor text-[14px] font-[400] ">Thêm người dùng</Button>
+          <Button onClick={() => { setTypeModal('create'); setCloseDialog(true) }} size={'square'} variant={'outline'} className="px-[14px] py-[6px] outline-none text-textColor text-[14px] font-[400] ">Thêm mới thuộc tính</Button>
           <Modal
             type={typeModal}
             closeDialog={closeDialog}
             onCloseDialog={() => setCloseDialog(false)}
-            element={user}
+            element={attribute}
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -92,48 +91,30 @@ export default function UserScreen() {
         </div>
       </div>
       <div className="">
-        {/* <NoResult/> */}
-        <div className="">
-          {
-            isLoading ? (<Loading className="mt-[200px] mb-[40px] " />) : (<Tables
-              className="mb-[30px] border border-gray-200 shadow-none"
-              data={data?.result?.data}
-              nameCol={["Tên Người dùng", "Địa chỉ", "Email", "Giới tính", "Quyền ", "Ảnh"]}
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
-              renderRow={(row: any) => {
-                return (
-                  <td className="w-full flex items-center py-[6px] ">
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">{row.name}</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">Chưa có</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">{ row.email.length>20?` ${row.email.substring(0,20)}..`:`${row.email}`  }</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">{row.gender}</span>
-                    </div>
-                    <div className="flex-1 text-left ">
-                      <div className={`${row.isAdmin ? 'bg-red-500': 'bg-blue-400'}  w-[100px] px-[6px] py-[2px]  flex items-center rounded-[6px] justify-center text-white `}>
-                        <span className="font-[500] ">{row.isAdmin ? 'Quản trị' : 'Người dùng'}</span>
+        {
+          data?.result?.data.length === 0 ? (<NoResult />) : (<div className="">
+            {
+              isLoading ? (<Loading className="mt-[200px] mb-[40px] " />) : (<Tables
+                className="mb-[30px] border border-gray-200 shadow-none"
+                data={data?.result?.data}
+                nameCol={["Tên thuộc tính"]}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
+                renderRow={(row: any) => {
+                  return (
+                    <td className="w-full flex items-center py-[14px] ">
+                      <div className="flex-1 text-left">
+                        <span className="ml-[20px] ">{row.attribute_name}</span>
                       </div>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <img
-                        className="ml-[20px] w-[40px] h-[40px] object-cover rounded-[100%] border border-gray-300 "
-                        alt="ảnh"
-                        src={row.avatar}
-                      />
-                    </div>
-                  </td>
-                )
-              }}
-            />)
-          }
-        </div>
+                    </td>
+                  )
+                }}
+              />)
+            }
+          </div>)
+        }
+
+
       </div>
     </div>
   )

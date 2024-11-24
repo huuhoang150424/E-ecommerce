@@ -1,17 +1,19 @@
 import { ClassicEditor, Bold, Essentials, Italic, Paragraph,Alignment  } from 'ckeditor5';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-
 import 'ckeditor5/ckeditor5.css';
 import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
 
-export default function Ckeditor() {
+interface CkeditorProps {
+  onChange?: (value: string) => void ; 
+}
 
+export default function Ckeditor({ onChange }: CkeditorProps) {
   const handleChange=(e:any,editor:any)=>{
     const data=editor.getData()
-    console.log("Mô tả sản phẩm: ",data)
+    if (onChange) {
+      onChange(data);
+    }
   }
-
-
   return (
     <CKEditor
       editor={ClassicEditor}

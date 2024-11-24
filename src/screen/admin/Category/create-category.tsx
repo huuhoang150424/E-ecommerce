@@ -65,7 +65,8 @@ export default function CreateCategoryModal({close,onClose}:TypePropsModal) {
           <DialogTitle className="text-textColor">Tạo danh mục</DialogTitle>
         </DialogHeader>
         {
-          isPending ? (<LoadingSpinner className='my-[70px] mx-auto ' />) : (<form onSubmit={handleSubmit(onSubmit)} method="POST" className="grid gap-4 py-4">
+          isPending ? (<LoadingSpinner className='my-[70px] mx-auto ' />) : (
+          <form onSubmit={handleSubmit(onSubmit)} method="POST" className="grid gap-4 py-4">
             <div className="flex flex-col gap-[5px] ">
               <div className="flex items-center gap-4">
                 <Label htmlFor="categories_name" className="text-right">

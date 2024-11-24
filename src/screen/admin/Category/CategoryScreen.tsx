@@ -17,10 +17,7 @@ export default function CategoryScreen() {
   //FETCH category
   const { isLoading: isLoadingCategories, data: categoryData, error: categoryError } = useQuery({
     queryKey: ['category'],
-    queryFn: getAllCat,
-    staleTime: 60000,
-    refetchOnWindowFocus: false,
-    cacheTime: 300000
+    queryFn: getAllCat
   });
   const handleDeleteCat = (category: any) => {
     setTypeModal('delete');
