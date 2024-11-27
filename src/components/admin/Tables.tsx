@@ -1,13 +1,16 @@
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 interface Props {
   className: string;
   data?: any;
   nameCol?: string[];
   renderRow?: any;
   handleDelete?: any;
-  handleUpdate?: any
+  handleUpdate?: any;
+  isUpdate?: boolean;
 }
-export default function Tables({ className, data, nameCol,renderRow,handleDelete ,handleUpdate}: Props) {
+export default function Tables({ className, data, nameCol,renderRow,handleDelete ,handleUpdate,isUpdate=false}: Props) {
+  console.log(data)
   return (
     <div className={`${cn('overflow-x-auto shadow-md rounded-lg w-full', className)}`}>
       <table className="w-full text-sm text-gray-500 table-fixed">
@@ -36,7 +39,11 @@ export default function Tables({ className, data, nameCol,renderRow,handleDelete
               </td>
               {renderRow(row)}
               <td className="w-[120px] flex items-center justify-center ">
-                <span onClick={()=>handleUpdate(row)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</span>
+                {
+                  isUpdate ? (
+                  <Link to={`/admin/editProduct/${row?.slug}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</Link>) : 
+                  (<span onClick={() => handleUpdate(row)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</span>)
+                }
                 <span onClick={()=>handleDelete(row)} className="font-medium text-red-600 dark:text-red-500 hover:underline ml-3 cursor-pointer ">Remove</span>
               </td>
             </tr>

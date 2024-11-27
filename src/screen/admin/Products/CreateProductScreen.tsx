@@ -34,9 +34,15 @@ export default function CreateProductScreen() {
   const [thumbImages, setThumbImages] = useState("");
   const queryClient = useQueryClient()
 
+  const page=1
+  const size=20
+
   const { data: allCat } = useQuery({
-    queryKey: ['category'],
-    queryFn: getAllCat
+    queryKey: ['category',{ page: page, pageSize: size }],
+    queryFn: ({ queryKey }: { queryKey: [string, { page: number; pageSize: number }] }) => {
+      const [, { page, pageSize }] = queryKey;
+      return getAllCat(page, pageSize);
+    },
   });
   const { data: attribute } = useQuery({
     queryKey: ['attribute'],
@@ -91,10 +97,11 @@ export default function CreateProductScreen() {
   const mutation = useMutation({
     mutationFn: createProduct,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["product"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
       reset();
       setThumbImages("");
       setImages([]);
+      setAttributes([]);
     },
     onError: (error: any) => {
       console.error('Tạo thất bại:', error);

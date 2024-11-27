@@ -5,9 +5,10 @@ import 'ckeditor5-premium-features/ckeditor5-premium-features.css';
 
 interface CkeditorProps {
   onChange?: (value: string) => void ; 
+  value?: string; 
 }
 
-export default function Ckeditor({ onChange }: CkeditorProps) {
+export default function Ckeditor({ onChange ,value}: CkeditorProps) {
   const handleChange=(e:any,editor:any)=>{
     const data=editor.getData()
     if (onChange) {
@@ -21,7 +22,7 @@ export default function Ckeditor({ onChange }: CkeditorProps) {
         plugins: [Essentials, Bold, Italic, Paragraph,Alignment],
         toolbar: ['undo', 'redo', '|', 'bold', 'italic','|', 'alignment:left', 'alignment:center', 'alignment:right'],
       }}
-      data='<p></p>'
+      data={value || '<p></p>'}
       contextItemMetadata={{
         name: 'editor1',
         yourAdditionalData: 2

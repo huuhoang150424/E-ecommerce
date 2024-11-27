@@ -13,11 +13,15 @@ export default function CategoryScreen() {
   const [typeModal, setTypeModal] = useState('create');
   const [closeDialog, setCloseDialog] = useState(false);
   const [category, setCategory] = useState(null);
-
+  const page=1 
+  const size=6 
   //FETCH category
   const { isLoading: isLoadingCategories, data: categoryData, error: categoryError } = useQuery({
-    queryKey: ['category'],
-    queryFn: getAllCat
+    queryKey: ['category',{ page: page, pageSize: size }],
+    queryFn: ({ queryKey }: { queryKey: [string, { page: number; pageSize: number }] }) => {
+      const [, { page, pageSize }] = queryKey; // Lấy tham số từ queryKey
+      return getAllCat(page, pageSize);
+    },
   });
   const handleDeleteCat = (category: any) => {
     setTypeModal('delete');
@@ -29,7 +33,6 @@ export default function CategoryScreen() {
     setCategory(category);
     setCloseDialog(true);
   }
-  console.log(typeof categoryData?.result?.data)
   return (
     <div className="">
       <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách mục sản phẩm</h1>
@@ -98,7 +101,7 @@ export default function CategoryScreen() {
               <Tables
                 className="mb-[30px] border border-gray-200 shadow-none"
                 nameCol={["Tên Danh mục", "Ảnh"]}
-                data={categoryData.result.data}
+                data={categoryData?.result?.data}
                 renderRow={(row: any) => {
                   return (
                     <td className="w-full flex items-center py-[6px] ">

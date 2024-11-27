@@ -34,7 +34,8 @@ export default function CreateCategoryModal({close,onClose}:TypePropsModal) {
       console.error('Tạo thất bại:', error);
     },
   })
-  const { isPending, isSuccess, data: mutationData } = mutation;
+  console.log(mutation)
+  const { isPending, isSuccess, data: mutationData,error } = mutation;
   const handleUploadImage = async (image: any) => {
     setLoading(true);
     try {
@@ -57,7 +58,14 @@ export default function CreateCategoryModal({close,onClose}:TypePropsModal) {
         title: mutationData?.result?.message
       })
     }
-  }, [isSuccess])
+    if (error) {
+      console.log(error.response.data.error_message.errors.non_field_errors[0])
+      toast({
+        variant: 'destructive',
+        title: error.response.data.error_message.errors.non_field_errors[0]
+      })
+    }
+  }, [isSuccess,error])
   return (
     <Dialog open={close} onOpenChange={onClose}>
       <DialogContent >

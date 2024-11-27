@@ -4,6 +4,7 @@ import  ListCard  from './card/ListCard';
 import  Footer  from './Footer';
 import  BreadcrumbCustom  from './BreadcrumbCustom';
 import  Rating  from './Rating';
+import  CountdownTimer  from './CountdownTimer';
 import  CardItem  from './card/CardItem';
 export {
   Banner,
@@ -12,5 +13,6 @@ export {
   Footer,
   BreadcrumbCustom,
   Rating,
-  CardItem
+  CardItem,
+  CountdownTimer
 }

@@ -20,9 +20,9 @@ export const uploadCategory = async (dataS:FormData) => {
   return response.data
 }
 
-export const getAllCat=async()=>{
+export const getAllCat=async(page: number, pageSize: number)=>{
   try {
-    const response:any=await handleApi('category/getAllCat')
+    const response:any=await handleApi('category/getAllCat',null,'GET',{ page, size: pageSize })
     return response.data
   } catch (err:any) {
     console.log(err)

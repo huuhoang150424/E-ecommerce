@@ -11,11 +11,10 @@ import { Loading } from '@/components/common';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginAuth } from '@/redux/action/auth';
 import { AppDispatch } from '@/redux/store';
+import { loginSchema } from './api';
+import { Link } from 'react-router-dom';
 
-const loginSchema = z.object({
-  email: z.string().email({ message: 'Email không hợp lệ' }),
-  password: z.string().min(1, { message: 'Mật khẩu tối thiểu 6 ký tự' })
-})
+
 
 type FormData = z.infer<typeof loginSchema>
 
@@ -52,14 +51,19 @@ export default function LoginScreen() {
                 </div>
                 {errors.password && <p className="text-red-500 text-[12px] font-[500] ">{errors.password.message}</p>}
               </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-[400] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Ghi nhớ đăng nhập
-                </label>
+              <div className="flex items-center justify-between  space-x-2">
+                <div className="flex items-center gap-[10px]">
+                  <Checkbox id="terms" />
+                  <label
+                    htmlFor="terms"
+                    className="text-sm font-[400] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Ghi nhớ đăng nhập
+                  </label>
+                </div>
+                <Link to={"/forgotPassword"} className="">
+                  <span className="text-primaryColor text-[14px] font-[500] ">Quên mật khẩu ?</span>
+                </Link>
               </div>
               <Button type='submit' variant={'primaryColor'} className='w-[30%] rounded-[30px] mt-[30px] ml-[310px] '>
                 Đăng nhập

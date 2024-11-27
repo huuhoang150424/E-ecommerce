@@ -187,8 +187,8 @@ function Header({ className }: Props) {
               </HoverCardTrigger>
               <HoverCardContent className="flex flex-col px-0 py-[5px] ">
                 <ShinyButton className="border-none" onClick={handleLogout}>Đăng xuất</ShinyButton>
-                <ShinyButton onClick={()=>navigate("/profileScreen")} className="border-none">Trang cá nhân</ShinyButton>
-                <ShinyButton   className="border-none" onClick={() => navigate("/orderScreen")}>Đơn hàng</ShinyButton>
+                <ShinyButton onClick={()=>navigate("/profile")} className="border-none">Trang cá nhân</ShinyButton>
+                <ShinyButton   className="border-none" onClick={() => navigate("/profile/orderScreen")}>Đơn hàng</ShinyButton>
                 {
                   isAdmin && (
                     <ShinyButton onClick={() => {navigate("admin/dashboard");localStorage.setItem("navId",'0')}} className="border-none">Quản trị</ShinyButton>
@@ -196,7 +196,7 @@ function Header({ className }: Props) {
                 }
               </HoverCardContent>
             </HoverCard>
-            <Link to={'/favouriteScreen'} className="flex items-center gap-[5px] text-textColor cursor-pointer ">
+            <Link to={'/profile/favouriteScreen'} className="flex items-center gap-[5px] text-textColor cursor-pointer ">
               <i className="fa-regular fa-heart text-[16px] "></i>
               <span>Yêu thích</span>
             </Link>

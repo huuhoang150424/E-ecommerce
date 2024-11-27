@@ -6,7 +6,7 @@ export default function ProfileRouter() {
   return (
     <ProfileLayout>
       <Routes>
-        <Route path='/profileScreen' element={<ProfileScreen />} />
+        <Route path='/' element={<ProfileScreen />} />
         <Route path='/orderScreen' element={<OrderScreen />} />
         <Route path='/favouriteScreen' element={<FavouriteScreen />} />
       </Routes>

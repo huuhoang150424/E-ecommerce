@@ -8,6 +8,9 @@ interface Props {
 
 
 export default function Paginator({totalPage,currentPage,className}:Props) {
+  
+
+  
   return (
     <Pagination className={cn('justify-end ',className)}>
     <PaginationContent className="  ">

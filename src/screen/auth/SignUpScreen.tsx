@@ -3,37 +3,25 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loading } from '@/components/common';
-import { handleApi } from '@/service';
 import {  useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { FormDataRegister, registerSchema, signUp } from './api';
 
-const registerSchema = z.object({
-  name: z.string().min(2, { message: 'Tên phải có ít nhất 2 ký tự' }),
-  email: z.string().email({ message: 'Email không hợp lệ' }),
-  password: z.string().min(6, { message: 'Mật khẩu tối thiểu 6 ký tự' }),
-  confirmPassword: z.string().min(6, { message: 'Nhắc lại mật khẩu không được để trống' }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Mật khẩu và nhắc lại mật khẩu không khớp',
-  path: ['confirmPassword'],
-});
-type FormData = z.infer<typeof registerSchema>;
+
+
 
 //sign up
-const signUp=async(dataS:FormData)=>{
-  const {data}=await handleApi('/auth/register',dataS,'POST')
-  return data
-}
+
 
 export default function SignUpScreen() {
   const navigate=useNavigate()
   const queryClient=useQueryClient()
   const {toast}=useToast()
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors } } = useForm<FormDataRegister>({
     resolver: zodResolver(registerSchema)
   })
 
@@ -47,7 +35,7 @@ export default function SignUpScreen() {
     },
   });
   const {isPending,data,isSuccess}=mutation
-  const onSubmit = (dataS: FormData) => {
+  const onSubmit = (dataS: FormDataRegister) => {
     mutation.mutate(dataS); 
   };
   useEffect(()=>{

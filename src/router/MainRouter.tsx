@@ -12,7 +12,7 @@ export default function MainRouter() {
         <Route path='/cartScreen' element={<CartScreen />} />
         <Route path='/checkOutScreen' element={<CheckOutScreen />} />
         <Route path='/searchScreen' element={<SearchScreen />} />
-        <Route path='/*' element={<ProfileRouter />} />
+        <Route path='/profile/*' element={<ProfileRouter />} />
         <Route path='*' element={<NotFoundScreen />} />
       </Routes>
     </MainLayout>
