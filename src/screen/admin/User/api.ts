@@ -30,9 +30,9 @@ export const createUser=async (dataS:FormData)=>{
   }
 
 }
-export const getAllUser=async ()=>{
+export const getAllUser=async (page: number, pageSize: number)=>{
   try {
-    const response=await handleApi('auth/getAllUser')
+    const response=await handleApi('auth/getAllUser',null,'GET',{ page, size: pageSize })
     return response.data
   } catch (err:any) {
     console.log(err)

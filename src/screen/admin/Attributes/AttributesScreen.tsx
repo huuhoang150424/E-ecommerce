@@ -7,15 +7,22 @@ import Modal from "./modal";
 import { useQuery } from "@tanstack/react-query";
 import { getAllAttribute } from "./api";
 import { Loading } from "@/components/common";
-import { Tables } from "@/components/admin";
+import { Paginator, Tables } from "@/components/admin";
 
 export default function AttributesScreen() {
   const [typeModal, setTypeModal] = useState('create');
   const [closeDialog, setCloseDialog] = useState(false);
   const [attribute, setAttribute] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1);
+  const size=6 
+
+
   const { isLoading, data } = useQuery({
-    queryKey: ['attribute'],
-    queryFn: getAllAttribute
+    queryKey: ['attribute',{currentPage:currentPage,pageSize:size}],
+    queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] })=>{
+      const [_,{currentPage,pageSize}]=queryKey;
+      return getAllAttribute(currentPage, pageSize);
+    }
   });
 
 
@@ -30,7 +37,9 @@ export default function AttributesScreen() {
     setCloseDialog(true);
     setAttribute(attribute);
   }
-
+  const handleChangePage=(page:number)=>{
+    setCurrentPage(page)
+  }
   return (
     <div>
       <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách thuộc tính</h1>
@@ -94,22 +103,31 @@ export default function AttributesScreen() {
         {
           data?.result?.data.length === 0 ? (<NoResult />) : (<div className="">
             {
-              isLoading ? (<Loading className="mt-[200px] mb-[40px] " />) : (<Tables
-                className="mb-[30px] border border-gray-200 shadow-none"
-                data={data?.result?.data}
-                nameCol={["Tên thuộc tính"]}
-                handleDelete={handleDelete}
-                handleUpdate={handleUpdate}
-                renderRow={(row: any) => {
-                  return (
-                    <td className="w-full flex items-center py-[14px] ">
-                      <div className="flex-1 text-left">
-                        <span className="ml-[20px] ">{row.attribute_name}</span>
-                      </div>
-                    </td>
-                  )
-                }}
-              />)
+              isLoading ? (<Loading className="mt-[200px] mb-[30px] " />) : (
+              <div className="">
+                <Tables
+                  className="mb-[30px] border border-gray-200 shadow-none"
+                  data={data?.result?.data}
+                  nameCol={["Tên thuộc tính"]}
+                  handleDelete={handleDelete}
+                  handleUpdate={handleUpdate}
+                  renderRow={(row: any) => {
+                    return (
+                      <td className="w-full flex items-center py-[14px] ">
+                        <div className="flex-1 text-left">
+                          <span className="ml-[20px] ">{row.attribute_name}</span>
+                        </div>
+                      </td>
+                    )
+                  }}
+                />
+                  <Paginator
+                    currentPage={data?.result?.currentPage}
+                    totalPage={data?.result?.totalPages}
+                    onPageChange={handleChangePage}
+                  />
+              </div>
+            )
             }
           </div>)
         }

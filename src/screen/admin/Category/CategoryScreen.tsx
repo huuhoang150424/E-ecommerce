@@ -13,14 +13,14 @@ export default function CategoryScreen() {
   const [typeModal, setTypeModal] = useState('create');
   const [closeDialog, setCloseDialog] = useState(false);
   const [category, setCategory] = useState(null);
-  const page=1 
+  const [currentPage, setCurrentPage] = useState(1);
   const size=6 
   //FETCH category
-  const { isLoading: isLoadingCategories, data: categoryData, error: categoryError } = useQuery({
-    queryKey: ['category',{ page: page, pageSize: size }],
-    queryFn: ({ queryKey }: { queryKey: [string, { page: number; pageSize: number }] }) => {
-      const [, { page, pageSize }] = queryKey; // Lấy tham số từ queryKey
-      return getAllCat(page, pageSize);
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['category',{ currentPage: currentPage, pageSize: size }],
+    queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] }) => {
+      const [, { currentPage, pageSize }] = queryKey; // Lấy tham số từ queryKey
+      return getAllCat(currentPage, pageSize);
     },
   });
   const handleDeleteCat = (category: any) => {
@@ -33,6 +33,11 @@ export default function CategoryScreen() {
     setCategory(category);
     setCloseDialog(true);
   }
+  const handleChangePage=(page:number)=>{
+    setCurrentPage(page)
+  }
+  console.log(data)
+  console.log(data?.result?.totalItems)
   return (
     <div className="">
       <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách mục sản phẩm</h1>
@@ -92,16 +97,16 @@ export default function CategoryScreen() {
         </div>
       </div>
       {
-        categoryData?.result?.data.length === 0 ? (<NoResult />) : (<div className=" ">
+        data?.result?.data.length === 0 ? (<NoResult />) : (<div className=" ">
           {
-            isLoadingCategories ? (<Loading
+            isLoading ? (<Loading
               className={'mt-[200px] mb-[40px]'}
             />
             ) : (
               <Tables
                 className="mb-[30px] border border-gray-200 shadow-none"
                 nameCol={["Tên Danh mục", "Ảnh"]}
-                data={categoryData?.result?.data}
+                data={data?.result?.data}
                 renderRow={(row: any) => {
                   return (
                     <td className="w-full flex items-center py-[6px] ">
@@ -123,6 +128,9 @@ export default function CategoryScreen() {
               />)
           }
           <Paginator
+            currentPage={data?.result?.currentPage}
+            totalPage={data?.result?.totalPages}
+            onPageChange={handleChangePage}
           />
         </div>)
       }

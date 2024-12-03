@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import NoResult from "@/components/admin/NoResult";
 import { Loading } from "@/components/common";
-import { Tables } from "@/components/admin";
+import { Paginator, Tables } from "@/components/admin";
 import Modal from "./modal";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -15,9 +15,13 @@ export default function UserScreen() {
   const [typeModal, setTypeModal] = useState('create');
   const [closeDialog, setCloseDialog] = useState(false);
   const [user, setUser] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const size=6 
   const { isLoading, data } = useQuery({
-    queryKey: ['user'],
-    queryFn: getAllUser
+    queryKey: ['user',{currentPage:currentPage,pageSize:size}],
+    queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] })=>{
+      const [_,{currentPage,pageSize}]=queryKey;
+      return getAllUser(currentPage,pageSize)}
   });
 
   const handleDelete=(user:any)=>{
@@ -31,7 +35,9 @@ export default function UserScreen() {
     setCloseDialog(true);
     setUser(user);
   }
-
+  const handleChangePage=(page:number)=>{
+    setCurrentPage(page)
+  }
   return (
     <div className="">
       <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách người dùng</h1>
@@ -95,43 +101,52 @@ export default function UserScreen() {
         {/* <NoResult/> */}
         <div className="">
           {
-            isLoading ? (<Loading className="mt-[200px] mb-[40px] " />) : (<Tables
-              className="mb-[30px] border border-gray-200 shadow-none"
-              data={data?.result?.data}
-              nameCol={["Tên Người dùng", "Địa chỉ", "Email", "Giới tính", "Quyền ", "Ảnh"]}
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
-              renderRow={(row: any) => {
-                return (
-                  <td className="w-full flex items-center py-[6px] ">
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">{row.name}</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">Chưa có</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">{ row.email.length>20?` ${row.email.substring(0,20)}..`:`${row.email}`  }</span>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <span className="ml-[20px] ">{row.gender}</span>
-                    </div>
-                    <div className="flex-1 text-left ">
-                      <div className={`${row.isAdmin ? 'bg-red-500': 'bg-blue-400'}  w-[100px] px-[6px] py-[2px]  flex items-center rounded-[6px] justify-center text-white `}>
-                        <span className="font-[500] ">{row.isAdmin ? 'Quản trị' : 'Người dùng'}</span>
+            isLoading ? (<Loading className="mt-[200px] mb-[40px] " />) : (
+            <div className="">
+              <Tables
+                className="mb-[30px] border border-gray-200 shadow-none"
+                data={data?.result?.data}
+                nameCol={["Tên Người dùng", "Địa chỉ", "Email", "Giới tính", "Quyền ", "Ảnh"]}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
+                renderRow={(row: any) => {
+                  return (
+                    <td className="w-full flex items-center py-[6px] ">
+                      <div className="flex-1 text-left">
+                        <span className="ml-[20px] ">{row.name}</span>
                       </div>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <img
-                        className="ml-[20px] w-[40px] h-[40px] object-cover rounded-[100%] border border-gray-300 "
-                        alt="ảnh"
-                        src={row.avatar}
-                      />
-                    </div>
-                  </td>
-                )
-              }}
-            />)
+                      <div className="flex-1 text-left">
+                        <span className="ml-[20px] ">Chưa có</span>
+                      </div>
+                      <div className="flex-1 text-left">
+                        <span className="ml-[20px] ">{ row.email.length>20?` ${row.email.substring(0,20)}..`:`${row.email}`  }</span>
+                      </div>
+                      <div className="flex-1 text-left">
+                        <span className="ml-[20px] ">{row.gender}</span>
+                      </div>
+                      <div className="flex-1 text-left ">
+                        <div className={`${row.isAdmin ? 'bg-red-500': 'bg-blue-400'}  w-[100px] px-[6px] py-[2px]  flex items-center rounded-[6px] justify-center text-white `}>
+                          <span className="font-[500] ">{row.isAdmin ? 'Quản trị' : 'Người dùng'}</span>
+                        </div>
+                      </div>
+                      <div className="flex-1 text-left">
+                        <img
+                          className="ml-[20px] w-[40px] h-[40px] object-cover rounded-[100%] border border-gray-300 "
+                          alt="ảnh"
+                          src={row.avatar}
+                        />
+                      </div>
+                    </td>
+                  )
+                }}
+              />
+              <Paginator
+                currentPage={data?.result?.currentPage}
+                totalPage={data?.result?.totalPages}
+                onPageChange={handleChangePage}
+              />
+            </div>
+          )
           }
         </div>
       </div>

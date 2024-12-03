@@ -51,9 +51,9 @@ export const createProduct=async (dataS:FormData)=>{
 
 }
 
-export const getAllProducts=async ()=>{
+export const getAllProducts=async (page: number, pageSize: number)=>{
   try {
-    const response=await handleApi('product/getAllProduct')
+    const response=await handleApi('product/getAllProduct',null,'GET',{page,size:pageSize})
     return response.data
   } catch (err:any) {
     console.log(err)

@@ -25,9 +25,9 @@ export const createAttribute=async (dataS:FormData)=>{
   }
 
 }
-export const getAllAttribute=async ()=>{
+export const getAllAttribute=async (page: number, pageSize: number)=>{
   try {
-    const response=await handleApi('product/getAllAttribute')
+    const response=await handleApi('product/getAllAttribute',null,'GET',{ page, size: pageSize })
     return response.data
   } catch (err:any) {
     console.log(err)
