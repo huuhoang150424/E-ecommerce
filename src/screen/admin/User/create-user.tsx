@@ -34,7 +34,7 @@ export default function CreateUserModal({ close, onClose }: TypePropsModal) {
       console.error('Tạo thất bại:', error);
     },
   })
-  const { isPending, isSuccess, data: mutationData } = mutation;
+  const { isPending, isSuccess, data,error ,isError} = mutation;
   const handleUploadImage = async (image: any) => {
     setLoading(true);
     try {
@@ -48,17 +48,22 @@ export default function CreateUserModal({ close, onClose }: TypePropsModal) {
     }
   };
   const onSubmit = (dataS: FormData) => {
-    console.log(dataS)
     mutation.mutate(dataS)
   }
   useEffect(() => {
     if (isSuccess) {
       toast({
         variant: 'success',
-        title: mutationData?.result?.message
+        title: data?.result?.message
       })
     }
-  }, [isSuccess])
+    if (isError) {
+      toast({
+        variant: 'destructive',
+        title: error.response?.data?.error_message?.non_field_errors[0]
+      })
+    }
+  }, [isSuccess,isError])
   return (
     <Dialog open={close} onOpenChange={onClose}>
       <DialogContent >

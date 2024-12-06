@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
 import NoResult from "@/components/admin/NoResult";
 import { Loading } from "@/components/common";
 import { Paginator, Tables } from "@/components/admin";
@@ -16,9 +17,10 @@ export default function UserScreen() {
   const [closeDialog, setCloseDialog] = useState(false);
   const [user, setUser] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const size=6 
+  const [sizePage, setSizePage] = useState(6);
+
   const { isLoading, data } = useQuery({
-    queryKey: ['user',{currentPage:currentPage,pageSize:size}],
+    queryKey: ['user',{currentPage:currentPage,pageSize:sizePage}],
     queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] })=>{
       const [_,{currentPage,pageSize}]=queryKey;
       return getAllUser(currentPage,pageSize)}
@@ -75,27 +77,23 @@ export default function UserScreen() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size={'square'} variant={'outline'} className="px-[14px] py-[6px] outline-none text-textColor text-[14px] font-[400] ">View</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className='w-56' align='end' forceMount>
-              <DropdownMenuLabel className='font-normal'>
-                <div className='flex flex-col space-y-1'>
-                  <p className='text-sm font-medium leading-none'>satnaing</p>
-                  <p className='text-xs leading-none text-muted-foreground'>nguyenhoanghuu15042004@gm...</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Trang cá nhân</DropdownMenuItem>
-                <DropdownMenuItem>Cài đặt</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <Select
+          value={`${sizePage}`}
+          onValueChange={(value) => {
+            setSizePage(Number(value))
+          }}
+        >
+          <SelectTrigger className='h-8 w-[70px]'>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent side='top'>
+            {[6, 12, 20, 30, 40].map((pageSize) => (
+              <SelectItem className="text-textColor" key={pageSize} value={`${pageSize}`}>
+                {pageSize}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="">
         {/* <NoResult/> */}

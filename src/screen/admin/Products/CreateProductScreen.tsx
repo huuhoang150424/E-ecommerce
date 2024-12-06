@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCat } from "../Category/api";
-import { getAllAttribute } from "../Attributes/api";
+import { getAllAttributes } from "../Attributes/api";
 import { handleUpload } from "@/utils/upLoadImage";
 import { LoadingSpinner } from "@/components/common";
 import { useForm } from "react-hook-form";
@@ -46,7 +46,9 @@ export default function CreateProductScreen() {
   });
   const { data: attribute } = useQuery({
     queryKey: ['attribute'],
-    queryFn: getAllAttribute
+    queryFn: () => {
+      return getAllAttributes(1,20);
+    }
   });
 
   const handleUploadImage = async (image: any) => {
@@ -112,7 +114,7 @@ export default function CreateProductScreen() {
       setValue("attributes", attributes);
     }
   }, [attributes, setValue]);
-  const { isPending, isSuccess, data } = mutation;
+  const { isPending, isSuccess, data,isError,error } = mutation;
 
   const onSubmit = (dataS: FormData) => {
     console.log(dataS)
@@ -125,7 +127,15 @@ export default function CreateProductScreen() {
         title: data?.result?.message
       })
     }
-  }, [isSuccess])
+    if (isError) {
+      if (isError) {
+        toast({
+          variant: 'destructive',
+          title: error.response.data.non_field_errors[0]
+        })
+      }
+    }
+  }, [isSuccess,isError])
 
   return (
     <div className=" ">

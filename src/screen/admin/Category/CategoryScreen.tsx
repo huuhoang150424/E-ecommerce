@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { useQuery } from "@tanstack/react-query";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
 import { useState } from "react";
 import { Loading } from "@/components/common";
 import { getAllCat } from "./api";
@@ -14,10 +14,11 @@ export default function CategoryScreen() {
   const [closeDialog, setCloseDialog] = useState(false);
   const [category, setCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const size=6 
+  const [sizePage, setSizePage] = useState(6);
+
   //FETCH category
   const { isLoading, data, error } = useQuery({
-    queryKey: ['category',{ currentPage: currentPage, pageSize: size }],
+    queryKey: ['category',{ currentPage: currentPage, pageSize: sizePage }],
     queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] }) => {
       const [, { currentPage, pageSize }] = queryKey; // Lấy tham số từ queryKey
       return getAllCat(currentPage, pageSize);
@@ -36,8 +37,6 @@ export default function CategoryScreen() {
   const handleChangePage=(page:number)=>{
     setCurrentPage(page)
   }
-  console.log(data)
-  console.log(data?.result?.totalItems)
   return (
     <div className="">
       <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách mục sản phẩm</h1>
@@ -74,27 +73,23 @@ export default function CategoryScreen() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size={'square'} variant={'outline'} className="px-[14px] py-[6px] outline-none text-textColor text-[14px] font-[400] ">View</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className='w-56' align='end' forceMount>
-              <DropdownMenuLabel className='font-normal'>
-                <div className='flex flex-col space-y-1'>
-                  <p className='text-sm font-medium leading-none'>satnaing</p>
-                  <p className='text-xs leading-none text-muted-foreground'>nguyenhoanghuu15042004@gm...</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Trang cá nhân</DropdownMenuItem>
-                <DropdownMenuItem>Cài đặt</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <Select
+          value={`${sizePage}`}
+          onValueChange={(value) => {
+            setSizePage(Number(value))
+          }}
+        >
+          <SelectTrigger className='h-8 w-[70px]'>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent side='top'>
+            {[6, 12, 20, 30, 40].map((pageSize) => (
+              <SelectItem className="text-textColor" key={pageSize} value={`${pageSize}`}>
+                {pageSize}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       {
         data?.result?.data.length === 0 ? (<NoResult />) : (<div className=" ">

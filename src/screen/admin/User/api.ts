@@ -26,7 +26,7 @@ export const createUser=async (dataS:FormData)=>{
     const response=await handleApi('auth/createUser',dataS,'POST')
     return response.data
   } catch (err:any) {
-    console.log(err)
+    throw err;
   }
 
 }
@@ -35,7 +35,7 @@ export const getAllUser=async (page: number, pageSize: number)=>{
     const response=await handleApi('auth/getAllUser',null,'GET',{ page, size: pageSize })
     return response.data
   } catch (err:any) {
-    console.log(err)
+    throw err;
   }
 
 }
@@ -45,7 +45,7 @@ export const updateUser = async (dataS: any) => {
     const response = await handleApi(`auth/updateUser/${id}`, payload, 'PUT');
     return response.data;
   } catch (err: any) {
-    console.log(err);
+    throw err;;
   }
 }
 
@@ -55,7 +55,7 @@ export const deleteUser=async (id:string)=>{
     const response=await handleApi(`auth/deleteUser/${id}`,null,'DELETE')
     return response.data
   } catch (err:any) {
-    console.log(err)
+    throw err;
   }
 
 }

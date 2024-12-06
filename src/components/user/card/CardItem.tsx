@@ -1,7 +1,18 @@
 import {Card,CardContent, CardHeader} from "@/components/ui/card"
 import Rating from "../Rating"
 
-export default function CardItem() {
+interface Props {
+  product?: any
+}
+
+
+export default function CardItem({product}:Props) {
+  
+  console.log(product)
+
+
+
+
   return (
     <Card className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
       <CardHeader className="p-0 bg-white h-[260px]  overflow-hidden relative group">
@@ -18,24 +29,24 @@ export default function CardItem() {
         </div>
         <img
           className=" h-full object-cover group-hover:scale-110 transition-all duration-500 ease-in-out "
-          src="https://culacstudio.com/wp-content/uploads/Product-DECAAR_12862.jpg"
+          src={product?.thumb_image}
           alt="product"
         />
       </CardHeader>
       <CardContent className="p-4">
-        <span className="text-[14px] text-gray-500">
-          {/* substring(0, 50) */}
-          Balo Ulzzang Học Sinh Chống Nước Hàn Quốc MARSOCI...</span>
+        <span className="text-[15px] text-gray-500">
+          {product?.product_name.length>20?`${product?.product_name.substring(0, 50)}...`:product?.product_name}
+        </span>
         <div className="mt-[10px] ">
           <Rating
-            countStar={4}
+            countStar={0}
             classList="gap-[4px] "
             styleStar="text-[12px] "
           />
         </div>
         <div className="flex items-center justify-between ">
           <div className="mt-[6px] flex items-center gap-[5px] ">
-            <h3 className="text-[15px]  text-textColor font-[500] ">200.000 vnđ</h3>
+            <h3 className="text-[15px]  text-textColor font-[500] ">{product?.price.toLocaleString('vi-VN')} vnđ</h3>
             <span className="line-through text-[12px] text-gray-400">20.000 vnđ </span>
           </div>
           <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">

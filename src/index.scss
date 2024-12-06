@@ -238,3 +238,8 @@
 .ck.ck-balloon-panel.ck-powered-by-balloon {
   @apply hidden;
 }
+
+
+.product-description p {
+  @apply text-[14px] text-gray-400 ;
+}

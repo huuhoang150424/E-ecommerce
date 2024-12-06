@@ -46,7 +46,7 @@ export const createProduct=async (dataS:FormData)=>{
     const response=await handleApi('product/createProduct',dataS,'POST')
     return response.data
   } catch (err:any) {
-    console.log(err)
+    throw err;
   }
 
 }
@@ -56,7 +56,7 @@ export const getAllProducts=async (page: number, pageSize: number)=>{
     const response=await handleApi('product/getAllProduct',null,'GET',{page,size:pageSize})
     return response.data
   } catch (err:any) {
-    console.log(err)
+    throw err;
   }
 }
 
@@ -74,12 +74,11 @@ export const getProduct = async ({ queryKey }: { queryKey: any[] }) => {
 
 export const updateProduct = async (dataS: any) => {
   const { id, ...payload } = dataS; 
-  console.log(id)
   try {
     const response = await handleApi(`product/editProduct/${id}`, payload, 'PUT');
     return response.data;
   } catch (err: any) {
-    console.log(err);
+    throw err;
   }
 }
 
@@ -89,7 +88,7 @@ export const deleteProduct=async (id:string)=>{
     const response=await handleApi(`product/deleteProduct/${id}`,null,'DELETE')
     return response.data
   } catch (err:any) {
-    console.log(err)
+    throw err;
   }
 
 }

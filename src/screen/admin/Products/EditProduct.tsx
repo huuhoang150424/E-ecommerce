@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllCat } from "../Category/api";
-import { getAllAttribute } from "../Attributes/api";
+import { getAllAttributes } from "../Attributes/api";
 import { handleUpload } from "@/utils/upLoadImage";
 import { Loading, LoadingSpinner } from "@/components/common";
 import { useForm } from "react-hook-form";
@@ -82,7 +82,7 @@ export default function EditProductScreen() {
   });
   const { data: attribute } = useQuery({
     queryKey: ['attribute'],
-    queryFn: getAllAttribute
+    queryFn: ()=>getAllAttributes(1,20)
   });
 
   const handleUploadImage = async (image: any) => {

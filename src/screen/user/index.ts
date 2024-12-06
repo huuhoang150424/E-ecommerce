@@ -1,12 +1,12 @@
-import HomeScreen from './HomeScreen';
-import ProductDetailScreen from './ProductDetailScreen';
-import CartScreen from './CartScreen';
+import HomeScreen from './home/HomeScreen';
+import ProductDetailScreen from './product/ProductDetailScreen';
+import CartScreen from './cart/CartScreen';
 import ProfileScreen from './ProfileScreen';
 import SearchScreen from './SearchScreen';
-import CheckOutScreen from './CheckOutScreen';
+import CheckOutScreen from './checkout/CheckOutScreen';
 import NotFoundScreen from './NotFoundScreen';
-import OrderScreen from './OrderScreen';
-import FavouriteScreen from './FavouriteScreen';
+import OrderScreen from './order/OrderScreen';
+import FavouriteScreen from './product/FavouriteScreen';
 import NotificationScreen from './NotificationScreen';
 
 export { 

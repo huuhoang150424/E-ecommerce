@@ -1,12 +1,28 @@
+import { LoadingSkeleton } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card"
 import { CardItem } from "@/components/user";
 import Banner from "@/components/user/Banner";
 import { selectIsAuthenticated, selectMessage } from "@/redux/authReducer";
 import { handleApi } from "@/service";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { getAllProductsRecent } from "./api";
+
+type SkeletonListProps = {
+  count?: number; 
+};
+
+const SkeletonList: React.FC<SkeletonListProps> = ({ count }) => (
+  <div className="mt-[30px] grid grid-cols-5 gap-[30px]">
+    {Array(count).fill(0).map((_, index) => (
+      <LoadingSkeleton key={index} />
+    ))}
+  </div>
+);
+
 
 
 export default function HomeScreen() {
@@ -15,8 +31,14 @@ export default function HomeScreen() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const message = useSelector(selectMessage)
   const [allCat,setAllCat]=useState([]);
+  const [productRecent,setProductRecent]=useState([]);
+  const isLoading=true
+  const {data:allProductRecent,isLoading:loadingProductRecent,error}=useQuery({
+    queryKey: ['productRecent'],
+    queryFn: getAllProductsRecent
+  })
 
-
+  console.log(allProductRecent?.result?.data)
 
   // useEffect(() => {
   //   const showMessageLogin = localStorage.getItem('showMessageLogin')
@@ -49,11 +71,9 @@ export default function HomeScreen() {
                   <span className="text-[14px] text-gray-400 font-[400]">320 sản phẩm</span>
                 </div>
               </li>
-
             )
           })
         }
-
       </ul>
       <div className="mt-[50px] ">
         <div className="flex items-center justify-between w-full ">
@@ -63,18 +83,21 @@ export default function HomeScreen() {
           </div>
         </div>
       </div>
-      <div className="mt-[30px] grid grid-cols-5 gap-5">
-        {
-          Array(5).fill(0).map((_, index) => {
-            return (
-              <Link key={index} to={`/productDetail/233231`}>
-                <CardItem />
-              </Link>
-            )
-          })
-        }
 
-      </div>
+      {
+        isLoading ? (<SkeletonList count={5}/>) : (
+        <div className="mt-[30px] grid grid-cols-5 gap-5">
+          {
+            Array(5).fill(0).map((_, index) => {
+              return (
+                <Link key={index} to={`/productDetail/233231`}>
+                  <CardItem />
+                </Link>
+              )
+            })
+          }
+        </div>)
+      }
       <div className="relative  mt-[60px]">
         <div className="absolute top-[18%] right-[5%] max-w-[360px] ">
           <h1 className="text-[34px] text-textColor font-[800] ">Sản phẩm đang giảm giá cao</h1>
@@ -104,18 +127,23 @@ export default function HomeScreen() {
           </ul>
         </div>
       </div>
-      <div className="mt-[30px] grid grid-cols-5 grid-rows-2 gap-5">
-        {
-          Array(10).fill(0).map((_, index) => {
-            return (
-              <Link key={index} to={`/productDetail/233231`}>
-                <CardItem />
-              </Link>
-            )
-          })
-        }
+      {
+        loadingProductRecent ? (<SkeletonList count={5} />) : (<div className="mt-[30px] grid grid-cols-5 grid-rows-2 gap-5">
+          {
+            allProductRecent?.result?.data?.map((product: any) => {
+              return (
+                <Link key={product?.id} to={`/productDetail/${product.id}`}>
+                  <CardItem 
+                    product={product}
+                  />
+                </Link>
+              )
+            })
+          }
 
-      </div>
+        </div>)
+      }
+      
       <div className="grid grid-cols-4 gap-[40px] mt-[50px] ">
         <Card className="border border-gray-200 rounded-[6px] ">
           <CardContent className="">
