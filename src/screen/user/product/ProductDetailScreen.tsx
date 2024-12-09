@@ -1,31 +1,139 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Rating } from "@/components/user"
-import { useState } from "react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Rating } from "@/components/user";
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, } from "@/components/ui/card";
 import { Link, useParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useScrollToTopOnMount from "@/hooks/useScrollToTopOnMount";
-import { useQuery } from "@tanstack/react-query";
-import { getProduct } from "./api";
-import { ImageMagnifier, Loading } from "@/components/common";
-
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addFavoriteProduct, deleteComments, FormDataComment, getComments, getProduct, postComment, removeFavoriteProduct, upLoadComment } from "./api";
+import { ImageMagnifier, Loading, LoadingSpinner } from "@/components/common";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
+import { toast } from "@/hooks/use-toast";
 
 
 
 
 
 export default function ProductDetailScreen() {
-  useScrollToTopOnMount();
+  //useScrollToTopOnMount();
   const [counter, setCounter] = useState(0);
   const [favourite, setFavourite] = useState(false);
-  const param = useParams()
+  const param = useParams();
+  const [imageActivate, setImageActivate] = useState<string | undefined>(undefined);
+  const queryClient=useQueryClient()
+  const { isLoading:isLoadingProduct, data: productDetail } = useQuery({
+    queryKey: ['productDetail', param.id],
+    queryFn: () => getProduct(param.id ?? ""),
 
-
-  const { isLoading: isLoadingProduct, data: productDetail } = useQuery({
-    queryKey: ['productDetail'],
-    queryFn: () => getProduct(param.id ?? "")
+  });
+  //post comment
+  const {register,handleSubmit,setValue}=useForm<FormDataComment>({
+    resolver: zodResolver(upLoadComment)
   })
+
+  const mutation=useMutation({
+    mutationFn: postComment,
+    onSuccess: ()=>{
+      queryClient.invalidateQueries({queryKey: ['comments']})
+      setValue("comment","")
+    },
+    onError:()=>{
+
+    }
+  })
+  const onSubmit=(data:FormDataComment)=>{
+    mutation.mutate({id:productDetail?.id,...data})
+  }
+  const {isPending:loadingPostComment}=mutation;
+
+  //get comment
+  const {
+    data: comments,
+    isLoading: loadingComment,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  } = useInfiniteQuery({
+    queryKey: ['comments', param.id],
+    queryFn: ({ pageParam = 0 }) => getComments({ productId: param.id, offset: pageParam }),
+    getNextPageParam: (lastPage) => {
+      return lastPage?.result?.has_next ? lastPage?.result?.next_offset : null;
+    },      
+    initialPageParam: 0 //khởi tạo là 0
+  });
+
+  const allComments = comments?.pages.flatMap(page => page.result.results) || [];
+  
+  //delete comment
+  const deleteMutation=useMutation({
+    mutationFn: deleteComments,
+    onSuccess: ()=>{
+      queryClient.invalidateQueries({queryKey: ['comments']})
+    },
+    onError:()=>{
+      
+    }
+  })
+
+  const {isPending:loadingDeleteComment,data:deleteCommentData,isSuccess:isDeleteCommentSuccess,isError:isDeleteCommentFail,error:deleteCommentError}=deleteMutation as any;
+
+  useEffect(() => {
+    if (isDeleteCommentSuccess) {
+      toast({
+        title: deleteCommentData?.result?.message,
+        variant: "success",
+      });
+    }
+  
+    if (isDeleteCommentFail) {
+      toast({
+        title: deleteCommentError?.response?.data?.error_message?.message,
+        variant: "destructive",
+      });
+    }
+  }, [isDeleteCommentSuccess, isDeleteCommentFail]);
+  
+  
+  //delete and update
+  const handleValueChange = (value: string) => {
+    const parsedValue = JSON.parse(value); 
+    if (parsedValue.action === "edit") {
+      console.log(`ID: ${parsedValue.commentId}`);
+    }
+    if (parsedValue.action === "delete") {
+      deleteMutation.mutate(parsedValue.commentId ?? "")
+    }
+  };
+
+  //favorite product
+  useEffect(() => {
+    if (productDetail?.is_favorite !== undefined) {
+        setFavourite(productDetail.is_favorite);
+    }
+  }, [productDetail]);
+
+
+  const toggleFavorite = async () => {
+      const newFavouriteStatus = !favourite;
+      setFavourite(newFavouriteStatus);
+      try {
+          if (newFavouriteStatus) {
+              await addFavoriteProduct(productDetail?.id);
+          } else {
+              await removeFavoriteProduct(productDetail?.id);
+          }
+      } catch (error) {
+          setFavourite(favourite);
+          console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
+      }
+  };
+
+
+
 
 
   return (
@@ -42,14 +150,13 @@ export default function ProductDetailScreen() {
                         <img
                           className="object-cover h-[400px] cursor-pointer "
                           alt=""
-                          src={productDetail?.thumb_image}
+                          src={imageActivate || productDetail?.thumb_image}
                         />
                       </DialogTrigger>
                       <DialogContent className="w-[500px] ">
                         <div className="mt-[10px] ">
-                          
                           <ImageMagnifier
-                            src={productDetail?.thumb_image}
+                            src={imageActivate || productDetail?.thumb_image}
                             width={500}
                             height={400}
                             magnifierHeight={150}
@@ -60,21 +167,12 @@ export default function ProductDetailScreen() {
                         </div>
                       </DialogContent>
                     </Dialog>
-
                   </div>
                   <ul className="grid grid-cols-4 gap-4">
-
-                    <li className=" rounded-[4px] border border-primaryColor cursor-pointer overflow-hidden">
-                      <img
-                        className="object-cover h-[80px] "
-                        alt=""
-                        src="https://maraviyainfotech.com/projects/grabit-tailwind/grabit-tailwind/assets/img/product-images/4_1.jpg"
-                      />
-                    </li>
                     {
                       productDetail?.image_urls?.map((img_url:string, index:number) => {
                         return (
-                          <li key={index} className=" rounded-[4px] cursor-pointer overflow-hidden">
+                          <li onClick={()=>setImageActivate(img_url)} key={index} className={` ${img_url===imageActivate?'border-[2px] border-primaryColor ':''} rounded-[4px] cursor-pointer overflow-hidden`}>
                             <img
                               className="object-cover h-[80px] "
                               alt=""
@@ -102,7 +200,20 @@ export default function ProductDetailScreen() {
                     <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">
                       <span className="text-[12px] font-[500] text-gray-400 ">-50%</span>
                     </div>
-                    <Button onClick={() => setFavourite(!favourite)} size={'square'} variant={'outline'} className="px-[12px] py-[11px] ml-[5px]"><i className={` ${favourite ? 'fa-solid fa-heart text-red-600' : 'fa-regular fa-heart  text-textColor '} transition-all duration-300 ease-linear text-[16px] `}></i></Button>
+                    <Button
+                      onClick={toggleFavorite}
+                      size="square"
+                      variant="outline"
+                      className="px-[12px] py-[11px] ml-[5px]"
+                    >
+                      <i
+                        className={`${favourite
+                            ? "fa-solid fa-heart text-red-600"
+                            : "fa-regular fa-heart text-textColor"
+                          } transition-all duration-300 ease-linear text-[16px]`}
+                      ></i>
+                    </Button>
+
                   </div>
                   <div className="mt-[10px] ">
                     <ul className="mt-[15px] ml-[0px] flex flex-col gap-1">
@@ -158,12 +269,17 @@ export default function ProductDetailScreen() {
                     </ul>
                   </div>
                   <div className="w-[0.6px] bg-gray-200 ml-[50px] "></div>
-                  <div className="">
+                  <div className="w-full  ">
                     <h5 className="text-[15px] font-[400] text-textColor">Bình luận của bạn</h5>
-                    <form className="mt-[15px] flex items-center gap-[15px] " onSubmit={(e: any) => { e.preventDefault() }} method="POST">
-                      <Input className="outline-none px-[14px] py-[8px] text-[14px]  min-w-[500px] " placeholder="Nhập bình luận của bạn..." />
-                      <Button className="font-[500] hover:bg-primaryColor transition-all duration-300 ease-linear text-white bg-primaryColor" variant={'default'}>Gửi</Button>
-                    </form>
+
+                    {
+                      loadingPostComment ? (<LoadingSpinner className="mx-auto mt-[50px] "/>) : (
+                      <form className="mt-[15px] flex items-center gap-[15px] " onSubmit={handleSubmit(onSubmit)} method="POST">
+                        <Input {...register('comment')} className="outline-none px-[14px] py-[8px] text-[14px]  min-w-[500px] " placeholder="Nhập bình luận của bạn..." />
+                        <Button className="font-[500] hover:bg-primaryColor transition-all duration-300 ease-linear text-white bg-primaryColor" variant={'default'}>Gửi</Button>
+                      </form>)
+                    }
+
                   </div>
                 </div>
                 <div className="w-full h-[0.5px] bg-gray-200 mb-[20px] mt-[30px] "></div>
@@ -176,9 +292,81 @@ export default function ProductDetailScreen() {
                 </div>
                 <div className="w-full h-[0.5px] bg-gray-200 mb-[30px] my-[15px] "></div>
                 {/* comment */}
-                <div className="">
 
-                </div>
+                {
+                  loadingComment ? (<Loading className="mt-[70px] mb-[50px] " />) : (
+                    <div className="w-full flex flex-col   ">
+                      {
+                        allComments.length === 0 ? (<div className="w-full flex flex-col gap-[20px] items-center justify-center py-[30px]">
+                          <img src="https://i.pinimg.com/736x/ff/f5/74/fff574ca85dfea25faf5128678fdb334.jpg" alt="" className="w-[100px] h-[100px]  " />
+                          <span className="text-[18px] font-[500] text-gray-500 ">Không có bình luận</span>
+                        </div>) : (<ul className="flex flex-col gap-[15px] ">
+                          {
+                            allComments.map((comment: any) => {
+                              return (
+
+                                <li key={comment?.id} className=" ">
+                                  {
+                                    loadingDeleteComment ? (<LoadingSpinner className="ml-[20px] " />) : (<div className="flex gap-[10px]">
+                                      <img
+                                        src={comment?.user_info?.avatar}
+                                        alt="user"
+                                        className="w-[40px] h-[40px] rounded-[50%] border border-gray-200"
+                                      />
+                                      <div className=" flex flex-col gap-[6px] bg-[#efeff1] px-[16px] pt-[6px] pb-[10px]  rounded-[18px] ">
+                                        <div className="flex flex-col">
+                                          <h4 className="text-[16px] font-[500] text-textColor ">{comment?.user_info?.name}</h4>
+                                          <span className="text-[12px] font-[400] text-gray-400  ">2 giờ trước</span>
+                                        </div>
+                                        <div className="  ">
+                                          <p className="text-[16px] text-textColor ">{comment?.comment}</p>
+                                        </div>
+                                      </div>
+                                      <Select onValueChange={handleValueChange}>
+                                        <SelectTrigger
+                                          isShowIcon={false}
+                                          className="w-0 p-0 shadow-none cursor-pointer outline-none border-none hover:opacity-85"
+                                        >
+                                          <i className="fa-solid fa-ellipsis text-textColor mr-[10px]"></i>
+                                        </SelectTrigger>
+                                        <SelectContent side="top">
+                                          <SelectItem
+                                            className="no-checkmark text-textColor text-[15px]"
+                                            value={JSON.stringify({ action: "edit", commentId: comment?.id })}
+                                          >
+                                            Sửa
+                                          </SelectItem>
+                                          <SelectItem
+                                            className="no-checkmark text-textColor text-[15px]"
+                                            value={JSON.stringify({ action: "delete", commentId: comment?.id })}
+                                          >
+                                            Xóa
+                                          </SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </div>)
+                                  }
+
+                                </li>
+                              )
+                            })
+                          }
+                        </ul>)
+                      }
+
+                      {hasNextPage && <Button
+                        onClick={() => fetchNextPage()}
+                        disabled={isFetching}
+                        variant={'outline'}
+                        size={'square'}
+                        className="self-center text-[14px] text-white bg-primaryColor mt-[30px] hover:bg-primaryColor hover:opacity-80 px-[12px] py-[6px] "
+                      >
+                        {
+                          isFetching ? ("Loading.....") : ("Xem thêm")
+                        }
+                      </Button>}
+                    </div>)
+                }
               </div>
             </div>
             <div className="col-span-3 sticky top-[30px] border border-gray-200 rounded-[4px] self-start overflow-hidden p-[20px] ">

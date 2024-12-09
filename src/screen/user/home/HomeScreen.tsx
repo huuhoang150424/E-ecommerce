@@ -5,7 +5,7 @@ import { CardItem } from "@/components/user";
 import Banner from "@/components/user/Banner";
 import { selectIsAuthenticated, selectMessage } from "@/redux/authReducer";
 import { handleApi } from "@/service";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -33,6 +33,7 @@ export default function HomeScreen() {
   const [allCat,setAllCat]=useState([]);
   const [productRecent,setProductRecent]=useState([]);
   const isLoading=true
+  const queryClient = useQueryClient();
   const {data:allProductRecent,isLoading:loadingProductRecent,error}=useQuery({
     queryKey: ['productRecent'],
     queryFn: getAllProductsRecent
@@ -132,11 +133,14 @@ export default function HomeScreen() {
           {
             allProductRecent?.result?.data?.map((product: any) => {
               return (
-                <Link key={product?.id} to={`/productDetail/${product.id}`}>
+                <div onClick={()=>{
+                  queryClient.invalidateQueries({ queryKey: ['productDetail'] }); 
+                  navigate(`/productDetail/${product?.id}`); 
+                }} key={product?.id} >
                   <CardItem 
                     product={product}
                   />
-                </Link>
+                </div>
               )
             })
           }

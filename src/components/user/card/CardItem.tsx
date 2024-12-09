@@ -7,11 +7,6 @@ interface Props {
 
 
 export default function CardItem({product}:Props) {
-  
-  console.log(product)
-
-
-
 
   return (
     <Card className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
