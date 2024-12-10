@@ -10,8 +10,9 @@ import { Button } from "../ui/button";
 import { jwtDecode } from 'jwt-decode'
 import { handleApi } from "@/service";
 import { toast } from "@/hooks/use-toast";
-import { Loading } from "../common";
+import { Loading, LoadingSpinner } from "../common";
 import { ScrollArea } from "../ui/scroll-area";
+import { useDebounce } from "@/hooks";
 
 interface Props {
   className?: string
@@ -55,6 +56,9 @@ const allCatDetail: Cats[] = [
 
 ];
 
+
+
+
 function Header({ className }: Props) {
   const [catActive, setCatActive] = useState<number>(0);
   const [loading, setLoading] = useState(false);
@@ -68,6 +72,53 @@ function Header({ className }: Props) {
   const { isAdmin } = jwtDecode<TokenPayload>(token)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [keyword,setKeyword]=useState("");
+  const [keywords,setKeywords]=useState<string[]>([]);
+  const debouncedKeyword = useDebounce(keyword, 500);
+  const searchRef = useRef<HTMLInputElement | null>(null); 
+  const [loadingSearch,setLoadingSearch]=useState(false);
+
+  //handle similar 
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (debouncedKeyword.trim()) {
+        setLoadingSearch(true);
+        try {
+          const response = await handleApi("product/similar", null, "GET", { keyword: debouncedKeyword });
+          setSuggestSearch(true)
+          setKeywords(response?.data?.result?.data || []);
+        } catch (err) {
+          console.error("Error fetching suggestions:", err);
+        } finally {
+          setLoadingSearch(false);
+        }
+      } else {
+        setKeywords([]);
+      }
+    };
+    if (debouncedKeyword) {
+      fetchSuggestions();
+    }
+  }, [debouncedKeyword]);
+
+  console.log(keywords)
+
+  //handle click outside similar
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setTimeout(() => setSuggestSearch(false), 200);  // Đóng danh sách khi bấm ra ngoài
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  //handle click outside dropdown
   const handleClickOutside = (e: MouseEvent) => {
     if (
       dropRef.current &&
@@ -104,6 +155,7 @@ function Header({ className }: Props) {
     e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài
   };
 
+  //logout
   const handleLogout = async () => {
     setLoading(true);
     try {
@@ -147,28 +199,49 @@ function Header({ className }: Props) {
           <h1 className="text-[30px] font-[800] text-textColor ">Brown<span className="text-primaryColor">Market</span></h1>
         </Link>
         <div className="col-span-6 relative">
-          <form action="" method="POST" className="border border-primaryColor rounded-[8px] overflow-hidden w-[95%] flex items-center  ">
-            <Input onBlur={() => setSuggestSearch(false)} onFocus={() => setSuggestSearch(true)} className="outline-none text-textColor px-[16px] py-[8px] border-none" placeholder="Tìm kiếm..." />
-            <Link to={'/searchScreen'} className="px-[20px] py-[11px] cursor-pointer bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out flex items-center justify-center">
+          <form  action="" method="POST" className="border border-primaryColor rounded-[8px] overflow-hidden w-[95%] flex items-center  ">
+            <Input
+              value={keyword}
+              onChange={(e: any) => setKeyword(e.target.value)}
+              onFocus={() => setSuggestSearch(true)}
+              className="outline-none text-textColor px-[16px] py-[8px] border-none"
+              placeholder="Tìm kiếm..."
+              ref={searchRef}
+            />
+            <Button 
+              type="submit" 
+              onClick={(e:any)=>{
+                e.preventDefault();
+                navigate(`/searchScreen/${keyword}`);
+              }} 
+              className="px-[20px] py-[11px] cursor-pointer bg-primaryColor hover:bg-primaryColor rounded-l-none border border-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out flex items-center justify-center"
+            >
               <i className="fa-solid fa-magnifying-glass text-white text-[16px] "></i>
-            </Link>
+            </Button>
             {
-              suggestSearch && (
+              (suggestSearch && keywords.length > 0 && keyword !== "") && (
                 <ul className="absolute rounded-[4px] border border-gray-200 shadow top-[110%] w-[95%]  bg-white z-50 flex flex-col gap-[4px] ">
-                  <ScrollArea className="h-[260px]">
-                    {
-                      Array(12).fill(0).map((_, index) => {
+                  {
+                    loadingSearch ? (<LoadingSpinner className="mx-auto my-[100px] " />) : (<ScrollArea>
+                      {keywords.map((item, index) => {
+                        console.log("rendern")
                         return (
-                          <li key={index} className=" px-[14px] py-[6px]  cursor-pointer hover:bg-gray-100 transition-all duration-300 ease-linear ">
-                            <span className="text-[14px] text-textColor font-[500] ">
-                              Từ khóa tìm kiếm
+                          <li
+                            key={index}
+                            className="px-[14px] py-[6px] cursor-pointer hover:bg-gray-100 transition-all duration-300 ease-linear"
+                            onClick={() => {
+                              navigate(`/searchScreen/${item}`);
+                              setSuggestSearch(false);
+                            }}
+                          >
+                            <span className="text-[15px] text-textColor" >
+                              {item}
                             </span>
                           </li>
                         )
-                      })
-                    }
-                  </ScrollArea>
-
+                      })}
+                    </ScrollArea>)
+                  }
                 </ul>
               )
             }

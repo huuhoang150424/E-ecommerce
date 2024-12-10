@@ -11,7 +11,7 @@ export default function MainRouter() {
         <Route path='/productDetail/:id' element={<ProductDetailScreen />} />
         <Route path='/cartScreen' element={<CartScreen />} />
         <Route path='/checkOutScreen' element={<CheckOutScreen />} />
-        <Route path='/searchScreen' element={<SearchScreen />} />
+        <Route path='/searchScreen/:keyword' element={<SearchScreen />} />
         <Route path='/profile/*' element={<ProfileRouter />} />
         <Route path='*' element={<NotFoundScreen />} />
       </Routes>

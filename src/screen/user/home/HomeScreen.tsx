@@ -1,4 +1,4 @@
-import { LoadingSkeleton } from "@/components/common";
+import {  SkeletonList } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card"
 import { CardItem } from "@/components/user";
@@ -11,17 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProductsRecent } from "./api";
 
-type SkeletonListProps = {
-  count?: number; 
-};
-
-const SkeletonList: React.FC<SkeletonListProps> = ({ count }) => (
-  <div className="mt-[30px] grid grid-cols-5 gap-[30px]">
-    {Array(count).fill(0).map((_, index) => (
-      <LoadingSkeleton key={index} />
-    ))}
-  </div>
-);
 
 
 
@@ -34,13 +23,10 @@ export default function HomeScreen() {
   const [productRecent,setProductRecent]=useState([]);
   const isLoading=true
   const queryClient = useQueryClient();
-  const {data:allProductRecent,isLoading:loadingProductRecent,error}=useQuery({
+  const {data:allProductRecent,isLoading:loadingProductRecent}=useQuery({
     queryKey: ['productRecent'],
     queryFn: getAllProductsRecent
   })
-
-  console.log(allProductRecent?.result?.data)
-
   // useEffect(() => {
   //   const showMessageLogin = localStorage.getItem('showMessageLogin')
   //   if (message && isAuthenticated && !showMessageLogin) {

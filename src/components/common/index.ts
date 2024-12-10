@@ -2,7 +2,7 @@ import Loading from "./loading/Loading";
 import LoadingSpinner from "./loading/loading-spinner";
 import Toast from "./toast";
 import NetworkError from "./network-error";
-import LoadingSkeleton from "./loading/loading-skeleton";
+import {LoadingSkeleton ,SkeletonList} from "./loading/loading-skeleton";
 import ImageMagnifier from "./ImageMagnifier";
 
 export {
@@ -11,5 +11,6 @@ export {
   Toast,
   LoadingSpinner,
   LoadingSkeleton,
-  ImageMagnifier
+  ImageMagnifier,
+  SkeletonList
 }

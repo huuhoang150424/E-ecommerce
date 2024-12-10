@@ -4,16 +4,32 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CardItem } from "@/components/user";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, } from "@/components/ui/pagination"
+import { useQuery } from "@tanstack/react-query";
+import { getProductSearch } from "./api";
+import { SkeletonList } from "@/components/common";
 
 export default function SearchScreen() {
   const [toPrice, setToPrice] = useState(0);
   const [fromPrice, setFromPrice] = useState(100);
-  const searchParam = useSearchParams();
+  const param=useParams();
+
+
+  const {data:dataSearch,isLoading:isLoadingSearch}=useQuery({
+    queryKey: ['searchProducts',{ keyword :param.keyword || ''}],
+    queryFn: ({queryKey}: {queryKey: [string, {keyword: string}]})=>{
+      const [,{keyword}]=queryKey;
+      return getProductSearch(keyword);
+    }
+  })
+  console.log(dataSearch?.result?.data)
+
+
+
 
   return (
     <div className="my-[50px]">
@@ -91,14 +107,15 @@ export default function SearchScreen() {
             </AccordionItem>
           </Accordion>
           <div className="">
-            <Button className="mt-[20px] w-full bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-300 ease-linear ">Xóa bộ lọc</Button>
+            <Button className="mt-[25px] w-full bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-300 ease-linear ">Lọc</Button>
+            <Button variant={'outline'} className="mt-[15px] w-full hover:opacity-80 transition-all duration-300 ease-linear text-textColor">Xóa bộ lọc</Button>
           </div>
         </div>
         <div className="col-span-9   ">
           <div className="border border-gray-200 rounded-[4px] pl-[20px] py-[6px] flex items-center justify-between ">
             <div className="flex items-center gap-[10px] ">
               <h2 className="text-[15px] font-[500] text-textColor ">Kết quả tìm kiếm cho từ khóa: </h2>
-              <span className="text-[15px] text-primaryColor font-[500] ">Đồ ăn</span>
+              <span className="text-[15px] text-primaryColor font-[500] ">{param.keyword}</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -145,15 +162,23 @@ export default function SearchScreen() {
               </li>
             </ul>
           </div>
-          <div className="grid grid-cols-4 grid-rows-5 gap-4 mt-[40px] ">
-            {
-              Array(20).fill(0).map((_, index) => {
-                return (
-                  <CardItem key={index} />
-                )
-              })
-            }
-          </div>
+          {
+            isLoadingSearch ? (<SkeletonList
+              className="mt-[40px] "
+              count={10}
+            />) : (<div className="grid grid-cols-4  gap-4 mt-[40px] ">
+              {
+                dataSearch?.result?.data.map((item: any, index: number) => {
+                  return (
+                    <CardItem
+                      key={index}
+                      product={item}
+                    />
+                  )
+                })
+              }
+            </div>)
+          }
         </div>
       </div>
       <div className="my-[50px] ">
