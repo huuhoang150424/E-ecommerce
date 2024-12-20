@@ -13,15 +13,25 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
 import { toast } from "@/hooks/use-toast";
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { addToCart, getCart } from "@/redux/action/cart";
+import { resetCartState, selectError, selectLoading, selectMessage, selectSuccess } from "@/redux/cartReducer";
+import RelateProduct from "./related-product";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 
 
 
 export default function ProductDetailScreen() {
-  //useScrollToTopOnMount();
+  useScrollToTopOnMount();
+  const dispatch=useDispatch<AppDispatch>();
+  const loadingAddCart=useSelector(selectLoading);
+  const successAddCart=useSelector(selectSuccess);
+  const messageAddCart=useSelector(selectMessage);
+  const errorAddCArt=useSelector(selectError);
   const [counter, setCounter] = useState(0);
-  const [favourite, setFavourite] = useState(false);
+  const [favorite, setFavorite] = useState(false);
   const param = useParams();
   const [imageActivate, setImageActivate] = useState<string | undefined>(undefined);
   const queryClient=useQueryClient()
@@ -30,6 +40,27 @@ export default function ProductDetailScreen() {
     queryFn: () => getProduct(param.id ?? ""),
 
   });
+  
+  //cart
+  useEffect(()=>{
+    if (successAddCart) {
+      toast({
+        variant: 'success',
+        title: messageAddCart 
+      })
+      dispatch(getCart())
+    }
+
+    if (errorAddCArt) {
+      toast({
+        variant: 'destructive',
+        title: messageAddCart 
+      })
+    }
+    dispatch(resetCartState())
+  },[successAddCart,errorAddCArt])
+
+
   //post comment
   const {register,handleSubmit,setValue}=useForm<FormDataComment>({
     resolver: zodResolver(upLoadComment)
@@ -112,24 +143,24 @@ export default function ProductDetailScreen() {
   //favorite product
   useEffect(() => {
     if (productDetail?.is_favorite !== undefined) {
-        setFavourite(productDetail.is_favorite);
+        setFavorite(productDetail.is_favorite);
     }
   }, [productDetail]);
 
-
+  //handle add and delete product favorite
   const toggleFavorite = async () => {
-      const newFavouriteStatus = !favourite;
-      setFavourite(newFavouriteStatus);
-      try {
-          if (newFavouriteStatus) {
-              await addFavoriteProduct(productDetail?.id);
-          } else {
-              await removeFavoriteProduct(productDetail?.id);
-          }
-      } catch (error) {
-          setFavourite(favourite);
-          console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
+    const newFavoriteStatus = !favorite;
+    setFavorite(newFavoriteStatus);
+    try {
+      if (newFavoriteStatus) {
+        await addFavoriteProduct(productDetail?.id);
+      } else {
+        await removeFavoriteProduct(productDetail?.id);
       }
+    } catch (error) {
+      setFavorite(favorite);
+      console.error("Lỗi khi cập nhật trạng thái yêu thích:", error);
+    }
   };
 
 
@@ -184,54 +215,77 @@ export default function ProductDetailScreen() {
                     }
                   </ul>
                 </div>
-                <div className="w-[60%]  border border-gray-200 rounded-[4px] overflow-hidden p-[20px]  self-start ">
-                  <h1 className="text-[26px] font-[600] text-textColor ">{productDetail?.product_name}</h1>
-                  <Rating
-                    countStar={0}
-                    classList="gap-[4px] items-center  mt-[10px]"
-                    styleStar="text-[12px] "
-                    styleLine="w-[2px] bg-slate-400 h-[18px] mx-[4px] "
-                    text="(Đã bán 1k)"
-                    styleText="text-[12px] font-[500] text-gray-400 "
-                  />
-                  <div className="mt-[15px] flex items-center gap-[10px] ">
-                    <h1 className="text-[22px] font-[700] text-primaryColor ">{productDetail?.price.toLocaleString('vi-VN')} vnđ</h1>
-                    <span className="line-through text-[14px] text-gray-400">20.000 vnđ </span>
-                    <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">
-                      <span className="text-[12px] font-[500] text-gray-400 ">-50%</span>
+                <div className="w-[60%] flex flex-col gap-[20px] self-start">
+                  <div className=" border border-gray-200 rounded-[4px] overflow-hidden p-[20px]   ">
+                    <h1 className="text-[26px] font-[600] text-textColor ">{productDetail?.product_name}</h1>
+                    <Rating
+                      countStar={0}
+                      classList="gap-[4px] items-center  mt-[10px]"
+                      styleStar="text-[12px] "
+                      styleLine="w-[2px] bg-slate-400 h-[18px] mx-[4px] "
+                      text="(Đã bán 1k)"
+                      styleText="text-[12px] font-[500] text-gray-400 "
+                    />
+                    <div className="mt-[15px] flex items-center gap-[10px] ">
+                      <h1 className="text-[22px] font-[700] text-primaryColor ">{productDetail?.price.toLocaleString('vi-VN')} vnđ</h1>
+                      <span className="line-through text-[14px] text-gray-400">20.000 vnđ </span>
+                      <div className="px-[4px] py-[1px] rounded-[4px] bg-gray-200 flex items-center justify-center ">
+                        <span className="text-[12px] font-[500] text-gray-400 ">-50%</span>
+                      </div>
+                      <Button
+                        onClick={toggleFavorite}
+                        size="square"
+                        variant="outline"
+                        className="px-[12px] py-[11px] ml-[5px]"
+                      >
+                        <i
+                          className={`${favorite
+                              ? "fa-solid fa-heart text-red-600"
+                              : "fa-regular fa-heart text-textColor"
+                            } transition-all duration-300 ease-linear text-[16px]`}
+                        ></i>
+                      </Button>
                     </div>
-                    <Button
-                      onClick={toggleFavorite}
-                      size="square"
-                      variant="outline"
-                      className="px-[12px] py-[11px] ml-[5px]"
-                    >
-                      <i
-                        className={`${favourite
-                            ? "fa-solid fa-heart text-red-600"
-                            : "fa-regular fa-heart text-textColor"
-                          } transition-all duration-300 ease-linear text-[16px]`}
-                      ></i>
-                    </Button>
-
+                    <div className="mt-[10px] ">
+                      <ul className="mt-[15px] ml-[0px] flex flex-col gap-1">
+                        {
+                          productDetail?.product_attributes?.map((item:any)=>{
+                            return (
+                              <li key={item.id} className=""><strong className="text-[15px] text-textColor">{item?.attribute_name} :   </strong><span className="text-[16px] ml-[4px] text-gray-400"> {item?.value}</span></li>
+                            )
+                          })
+                        }
+                      </ul>
+                      <div className="product-description mt-[10px] ">
+                        {productDetail?.description ? (
+                          <div dangerouslySetInnerHTML={{ __html: productDetail.description  }} />
+                        ) : (
+                          <p>No description available</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-[10px] ">
-                    <ul className="mt-[15px] ml-[0px] flex flex-col gap-1">
-                      {
-                        productDetail?.product_attributes?.map((item:any)=>{
-                          return (
-                            <li key={item.id} className=""><strong className="text-[15px] text-textColor">{item?.attribute_name} :   </strong><span className="text-[16px] ml-[4px] text-gray-400"> {item?.value}</span></li>
-                          )
-                        })
-                      }
-                    </ul>
-                    <div className="product-description mt-[10px] ">
-                      {productDetail?.description ? (
-                        <div dangerouslySetInnerHTML={{ __html: productDetail.description  }} />
-                      ) : (
-                        <p>No description available</p>
-                      )}
-                    </div>
+                  <h1 className="text-textColor text-[18px] font-[500] ">Sản phẩm liên quan</h1>
+                  <div className="">
+                    <Swiper
+                      spaceBetween={30}
+                      slidesPerView={2}
+                      onSlideChange={() => console.log('slide change')}
+                      onSwiper={(swiper) => console.log(swiper)}
+                    >
+                      <SwiperSlide>
+                        <RelateProduct/>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <RelateProduct/>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <RelateProduct/>
+                      </SwiperSlide>
+                      <SwiperSlide>
+                        <RelateProduct/>
+                      </SwiperSlide>
+                    </Swiper>
                   </div>
                 </div>
               </div>
@@ -380,7 +434,7 @@ export default function ProductDetailScreen() {
                 </ul>
                 <h3 className="text-[16px] font-[600] text-textColor mt-[20px] ">Số lượng</h3>
                 <div className="flex items-center gap-[6px] w-auto mt-[15px] ">
-                  <Button onClick={() => setCounter(counter < 2 ? 1 : counter - 1)} size={'square'} variant={'outline'} className="px-[12px] py-[11px] "><i className="fa-solid fa-minus text-textColor"></i></Button>
+                  <Button onClick={() => setCounter(counter < 1 ? 0 : counter - 1)} size={'square'} variant={'outline'} className="px-[12px] py-[11px] "><i className="fa-solid fa-minus text-textColor"></i></Button>
                   <Input
                     value={counter}
                     onChange={(e: any) => setCounter(e.target.value)}
@@ -391,8 +445,19 @@ export default function ProductDetailScreen() {
                 <h3 className="text-[16px] font-[600] text-textColor mt-[15px] ">Tạm tính</h3>
                 <h1 className="text-[26px] font-[600] text-textColor mt-[10px] ">150.000 vnđ</h1>
                 <Button className="w-full mt-[10px] bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-300 ease-linear">Mua ngay</Button>
-                <Button variant={'outline'} className="w-full mt-[10px]  ">Thêm vào giỏ hàng</Button>
-
+                {
+                  loadingAddCart ? (<LoadingSpinner className="mx-auto mt-[20px]" />) : (<Button
+                    variant={'outline'}
+                    className="w-full mt-[10px]  text-textColor"
+                    onClick={() => {
+                      dispatch(addToCart({
+                        product_id: productDetail.id,
+                        quantity: counter
+                      }))
+                      
+                    }}
+                  >Thêm vào giỏ hàng</Button>)
+                }
               </div>
             </div>
           </div>
@@ -434,8 +499,6 @@ export default function ProductDetailScreen() {
                           </div>
                         </div>
                       </CardContent>
-                      {/* <CardFooter className="">
-                      </CardFooter> */}
                     </Card>
                   </Link>
                 )

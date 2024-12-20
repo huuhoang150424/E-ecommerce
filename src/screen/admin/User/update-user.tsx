@@ -20,7 +20,7 @@ export default function UpdateUserModal({ close, onClose ,user}: TypePropsModal)
   const [isAdmin, setIsAdmin] = useState(user.isAdmin );
 
   const queryClient = useQueryClient()
-  //POST category
+  //POST user
   const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {
       name: user.name,

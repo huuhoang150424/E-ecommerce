@@ -3,22 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card"
 import { CardItem } from "@/components/user";
 import Banner from "@/components/user/Banner";
-import { selectIsAuthenticated, selectMessage } from "@/redux/authReducer";
+import { resetAuthState, selectIsAuthenticated, selectMessage, selectSuccess } from "@/redux/authReducer";
 import { handleApi } from "@/service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProductsRecent } from "./api";
-
+import { toast } from "@/hooks/use-toast";
+import { AppDispatch } from "@/redux/store";
 
 
 
 export default function HomeScreen() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const message = useSelector(selectMessage)
+  const successAuth=useSelector(selectSuccess);
+  const message = useSelector(selectMessage);
   const [allCat,setAllCat]=useState([]);
   const [productRecent,setProductRecent]=useState([]);
   const isLoading=true
@@ -27,19 +28,18 @@ export default function HomeScreen() {
     queryKey: ['productRecent'],
     queryFn: getAllProductsRecent
   })
-  // useEffect(() => {
-  //   const showMessageLogin = localStorage.getItem('showMessageLogin')
-  //   if (message && isAuthenticated && !showMessageLogin) {
-  //     toast({
-  //       variant: 'success',
-  //       title: message
-  //     })
-  //     localStorage.setItem('showMessageLogin', 'true');
-  //   }
-  //   return ()=>{
-  //     localStorage.removeItem('showMessageLogin')
-  //   }
-  // }, [isAuthenticated, message])
+
+
+
+  useEffect(() => {
+    if (message) {
+      toast({
+        variant: 'success',
+        title: message
+      })
+      dispatch(resetAuthState())
+    }
+  }, [successAuth, message,dispatch])
 
 
   return (

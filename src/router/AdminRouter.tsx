@@ -7,12 +7,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 
 export default function AdminRouter() {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const isAdmin = true;
-  if (!isAuthenticated || !isAdmin) {
-    return <Navigate to="/home" />;
-  }
-
   return (
     <AdminLayout>
       <Routes>

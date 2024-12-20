@@ -49,9 +49,6 @@ export const deleteComments = async (commentId: string) => {
   }
 };
 
-
-
-
 export const postComment =async (data:any)=>{
   const {id,...dataS}=data;
   try {
@@ -64,8 +61,29 @@ export const postComment =async (data:any)=>{
   }
 }
 
+export const updateComment =async (data:any)=>{
+  const {id,...dataS}=data;
+  try {
+    const response=await handleApi(
+      `review/updateComment/${id}`,dataS,'PUT'
+    );
+    return response.data;
+  } catch (err:any) {
+    throw err;
+  }
+}
 
 //favorite product
+export const getAllFavoriteProduct =async ()=>{
+  try {
+    const response=await handleApi('product/getAllFavoriteProduct');
+    return response.data;
+  } catch (err:any) {
+    throw err;
+  }
+}
+
+
 export const addFavoriteProduct =async (productId:String)=>{
   try {
     const response=await handleApi(
@@ -80,7 +98,9 @@ export const addFavoriteProduct =async (productId:String)=>{
 export const removeFavoriteProduct =async (productId:String)=>{
   try {
     const response=await handleApi(
-      `product/removeFavoriteProduct/${productId}`,null,'DELETE'
+      `product/removeFavoriteProduct`,{
+        productId: productId
+      },'DELETE'
     );
     return response.data;
   } catch (err:any) {

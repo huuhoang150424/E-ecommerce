@@ -8,9 +8,11 @@ interface Props {
   handleDelete?: any;
   handleUpdate?: any;
   isUpdate?: boolean;
+  isAction?:boolean;
+  renderSelect?: any
 }
-export default function Tables({ className, data, nameCol,renderRow,handleDelete ,handleUpdate,isUpdate=false}: Props) {
-  console.log(data)
+export default function Tables({ className, data, nameCol,renderRow,handleDelete ,handleUpdate,isUpdate=false,isAction=true,renderSelect}: Props) {
+  console.log(renderSelect)
   return (
     <div className={`${cn('overflow-x-auto shadow-md rounded-lg w-full', className)}`}>
       <table className="w-full text-sm text-gray-500 table-fixed">
@@ -38,14 +40,16 @@ export default function Tables({ className, data, nameCol,renderRow,handleDelete
                 <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 cursor-pointer " />
               </td>
               {renderRow(row)}
-              <td className="w-[120px] flex items-center justify-center ">
-                {
-                  isUpdate ? (
-                  <Link to={`/admin/editProduct/${row?.slug}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</Link>) : 
-                  (<span onClick={() => handleUpdate(row)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</span>)
-                }
-                <span onClick={()=>handleDelete(row)} className="font-medium text-red-600 dark:text-red-500 hover:underline ml-3 cursor-pointer ">Remove</span>
-              </td>
+              {
+                isAction ?(<td className="w-[120px] flex items-center justify-center ">
+                  {
+                    isUpdate ? (
+                    <Link to={`/admin/editProduct/${row?.slug}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</Link>) : 
+                    (<span onClick={() => handleUpdate(row)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</span>)
+                  }
+                  <span onClick={()=>handleDelete(row)} className="font-medium text-red-600 dark:text-red-500 hover:underline ml-3 cursor-pointer ">Remove</span>
+                </td>) :(renderSelect())
+              }
             </tr>
           ))}
         </tbody>

@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 export default function DeleteUserModal({ close, onClose, id }: TypePropsModal) {
-  console.log("lấy  id " ,id)
+
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: deleteUser,

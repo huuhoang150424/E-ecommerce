@@ -12,8 +12,7 @@ import { useEffect } from "react";
 
 
 export default function UpdateAttributeModal({close,onClose,attribute}:TypePropsModal) {
-
-  const queryClient=useQueryClient()
+  const queryClient=useQueryClient();
   //POST attribute
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
     defaultValues: {

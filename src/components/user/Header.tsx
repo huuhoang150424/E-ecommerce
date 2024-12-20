@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loading, LoadingSpinner } from "../common";
 import { ScrollArea } from "../ui/scroll-area";
 import { useDebounce } from "@/hooks";
+import { hiddenShowMiniCart, selectItem, selectShowMiniCart } from "@/redux/cartReducer";
 
 interface Props {
   className?: string
@@ -73,6 +74,10 @@ function Header({ className }: Props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const showMiniCart=useSelector(selectShowMiniCart);
+  const carts=useSelector(selectItem);
+
+  //search
   const [keyword,setKeyword]=useState("");
   const [keywords,setKeywords]=useState<string[]>([]);
   const debouncedKeyword = useDebounce(keyword, 500);
@@ -102,7 +107,6 @@ function Header({ className }: Props) {
     }
   }, [debouncedKeyword]);
 
-  console.log(keywords)
 
   //handle click outside similar
   useEffect(() => {
@@ -154,6 +158,18 @@ function Header({ className }: Props) {
   const preventPropagation = (e: React.MouseEvent) => {
     e.stopPropagation(); // Ngăn sự kiện click truyền ra ngoài
   };
+
+  //hidden showMiniCart
+  useEffect(()=>{
+    let timmer;
+    timmer=setTimeout(()=>{
+      dispatch(hiddenShowMiniCart())
+    },2000)
+    return ()=>{
+      clearTimeout(timmer)
+    }
+  },[showMiniCart])
+
 
   //logout
   const handleLogout = async () => {
@@ -269,7 +285,7 @@ function Header({ className }: Props) {
                 }
               </HoverCardContent>
             </HoverCard>
-            <Link to={'/profile/favouriteScreen'} className="flex items-center gap-[5px] text-textColor cursor-pointer ">
+            <Link to={'/profile/favoriteScreen'} className="flex items-center gap-[5px] text-textColor cursor-pointer ">
               <i className="fa-regular fa-heart text-[16px] "></i>
               <span>Yêu thích</span>
             </Link>
@@ -277,8 +293,17 @@ function Header({ className }: Props) {
               <i className="fa-solid fa-cart-shopping text-[16px] "></i>
               <span>Giỏ hàng</span>
               <div className="absolute top-[-54%] right-[64%] w-[20px] h-[20px] rounded-[50%] bg-redColor flex items-center justify-center ">
-                <span className="text-[12px] font-[600] text-white">10</span>
+                <span className="text-[12px] font-[600] text-white">{carts.length}</span>
               </div>
+              {
+                showMiniCart && (<div className=" absolute slide-bottom flex flex-col gap-[10px] z-[99999999] px-[20px] py-[15px] bg-white rounded-[8px] border border-gray-100 shadow-xl top-[130%] right-[-100%] ">
+                  <div className="flex items-center gap-[10px] ">
+                    <i className="fa-solid fa-circle-check text-green-500"></i>
+                    <span className="text-[14px] text-textColor font-[500] ">Thêm vào giỏ hàng thành công</span>
+                  </div>
+                  <Button className=" w-[240px] cursor-pointer bg-primaryColor hover:bg-primaryColor hover:opacity-85 transition-all duration-300 ease-in-out">Xem giỏ hàng</Button>
+                </div>)
+              }
             </Link>
           </div>
         </div>

@@ -64,18 +64,9 @@ export const navIcon: navIcon[] = [
     id: 2,
     icon: "fa-solid fa-cart-shopping",
     label: 'Đơn hàng',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 2.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách đơn hàng',
-        navigate: '/admin/order',
-        isAccordion: false,
-        children: []
-      }
-    ]
+    navigate: '/admin/order',
+    isAccordion: false,
+    children: []
   },
   {
     id: 3,
@@ -129,7 +120,7 @@ export const navIcon: navIcon[] = [
         id: 6.1,
         icon: "fa-solid fa-plus",
         label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
+        navigate: '/admin/createSale',
         isAccordion: false,
         children: []
       },
@@ -137,7 +128,7 @@ export const navIcon: navIcon[] = [
         id: 6.2,
         icon: "fa-solid fa-list",
         label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
+        navigate: '/admin/sale',
         isAccordion: false,
         children: []
       }

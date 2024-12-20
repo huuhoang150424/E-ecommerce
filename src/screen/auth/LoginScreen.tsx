@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from "@/components/ui/checkbox"
 import { useDispatch, useSelector } from 'react-redux';
-import { selectLoading } from '@/redux/authReducer';
+import { resetAuthState, selectError, selectLoading, selectMessage } from '@/redux/authReducer';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { Loading } from '@/components/common';
@@ -13,6 +13,8 @@ import { loginAuth } from '@/redux/action/auth';
 import { AppDispatch } from '@/redux/store';
 import { loginSchema } from './api';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 
 
@@ -20,10 +22,22 @@ type FormData = z.infer<typeof loginSchema>
 
 export default function LoginScreen() {
   const loading = useSelector(selectLoading);
+  const error=useSelector(selectError);
+  const message=useSelector(selectMessage);
   const dispatch = useDispatch<AppDispatch>();
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(loginSchema)
   })
+
+  useEffect(()=>{
+    if (error) {
+      toast({
+        variant: 'destructive',
+        title: message
+      })
+      dispatch(resetAuthState())
+    }
+  },[error])
 
   const onSubmit = async (dataS: FormData) => {
     dispatch(loginAuth(dataS))

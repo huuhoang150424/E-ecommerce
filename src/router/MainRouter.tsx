@@ -2,8 +2,20 @@ import { CartScreen, CheckOutScreen, HomeScreen, NotFoundScreen, ProductDetailSc
 import { Route, Routes } from 'react-router-dom';
 import { MainLayout} from '@/layout';
 import ProfileRouter from './ProfileRouter';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { getCart } from '@/redux/action/cart';
 
 export default function MainRouter() {
+  const dispatch=useDispatch<AppDispatch>()
+  
+  useEffect(() => {
+
+    dispatch(getCart())
+  }, [dispatch])
+
+
   return (
     <MainLayout>
       <Routes>

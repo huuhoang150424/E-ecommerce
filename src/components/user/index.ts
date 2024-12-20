@@ -6,6 +6,8 @@ import  BreadcrumbCustom  from './BreadcrumbCustom';
 import  Rating  from './Rating';
 import  CountdownTimer  from './CountdownTimer';
 import  CardItem  from './card/CardItem';
+import  TabsComponent  from './tab';
+
 export {
   Banner,
   Header,
@@ -14,5 +16,6 @@ export {
   BreadcrumbCustom,
   Rating,
   CardItem,
-  CountdownTimer
+  CountdownTimer,
+  TabsComponent
 }

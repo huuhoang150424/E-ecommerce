@@ -1,5 +1,5 @@
 import { ProfileLayout } from '@/layout';
-import {  FavouriteScreen, OrderScreen, ProfileScreen } from '@/screen/user';
+import {  FavoriteScreen, OrderScreen, ProfileScreen } from '@/screen/user';
 import { Route, Routes } from 'react-router-dom';
 
 export default function ProfileRouter() {
@@ -8,7 +8,7 @@ export default function ProfileRouter() {
       <Routes>
         <Route path='/' element={<ProfileScreen />} />
         <Route path='/orderScreen' element={<OrderScreen />} />
-        <Route path='/favouriteScreen' element={<FavouriteScreen />} />
+        <Route path='/favoriteScreen' element={<FavoriteScreen />} />
       </Routes>
     </ProfileLayout>
   )

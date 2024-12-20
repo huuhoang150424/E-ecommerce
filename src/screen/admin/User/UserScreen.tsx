@@ -114,7 +114,7 @@ export default function UserScreen() {
                         <span className="ml-[20px] ">{row.name}</span>
                       </div>
                       <div className="flex-1 text-left">
-                        <span className="ml-[20px] ">Chưa có</span>
+                        <span className="ml-[20px] ">{row.address[0]}</span>
                       </div>
                       <div className="flex-1 text-left">
                         <span className="ml-[20px] ">{ row.email.length>20?` ${row.email.substring(0,20)}..`:`${row.email}`  }</span>

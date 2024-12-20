@@ -5,7 +5,11 @@ interface User {
   id: number;
   name: string;
   email: string;
-  avatar: string
+  avatar: string;
+  phone: number;
+  gender: string;
+  address: string[];
+  birth_date: any | ""
 }
 
 interface AuthState {
@@ -15,6 +19,7 @@ interface AuthState {
   loading: boolean;
   error: boolean;
   message: string;
+  success: boolean
 }
 
 const initialState: AuthState = {
@@ -24,6 +29,7 @@ const initialState: AuthState = {
   loading: false,
   error: false,
   message: '',
+  success: false
 };
 
 const authSlice = createSlice({
@@ -34,8 +40,13 @@ const authSlice = createSlice({
       return initialState
     },
     updateToken: (state,action)=>{
-      state.token=action.payload.token
-  }
+      state.token=action.payload.token;
+    },
+    resetAuthState: (state)=>{
+      state.message='';
+      state.loading=false;
+      state.error=false;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -49,15 +60,15 @@ const authSlice = createSlice({
         state.message = action.payload.message;
         state.user = action.payload.user;
       })
-      .addCase(loginAuth.rejected, (state) => {
+      .addCase(loginAuth.rejected, (state,action:any) => {
         state.loading = false;
         state.error = true;
-        //state.message = action.payload.message;
+        state.message =action.payload.data.non_field_errors[0];
       });
   },
 });
 
-export const { logout,updateToken } = authSlice.actions;
+export const { logout,updateToken ,resetAuthState} = authSlice.actions;
 
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
 export const selectToken = (state: { auth: AuthState }) => state.auth.token;
@@ -65,5 +76,6 @@ export const selectUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectLoading = (state: { auth: AuthState }) => state.auth.loading;
 export const selectError = (state: { auth: AuthState }) => state.auth.error;
 export const selectMessage = (state: { auth: AuthState }) => state.auth.message;
+export const selectSuccess = (state: { auth: AuthState }) => state.auth.success;
 
 export default authSlice.reducer;
