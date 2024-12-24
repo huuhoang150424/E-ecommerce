@@ -12,9 +12,17 @@ export const getAllOrder=async (page: number, pageSize: number)=>{
   }
 }
 
-export const getAllProductsRecent =async ()=>{
+export const confirmOrder =async (id:string)=>{
   try {
-    const response=await handleApi('product/getProductRecent')
+    const response=await handleApi(`order/confirmOrder/${id}`,null,'POST')
+    return response.data
+  } catch (err:any) {
+    throw err;
+  }
+}
+export const destroyOrder =async (id:string)=>{
+  try {
+    const response=await handleApi(`order/destroy/${id}`,null,'POST')
     return response.data
   } catch (err:any) {
     throw err;

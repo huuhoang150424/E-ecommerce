@@ -64,43 +64,6 @@ export default function HomeScreen() {
       </ul>
       <div className="mt-[50px] ">
         <div className="flex items-center justify-between w-full ">
-          <h1 className="text-[20px] font-[700] text-textColor ">Sản phẩm đang <span className="text-primaryColor ">giảm giá</span></h1>
-          <div className="px-[12px] py-[8px] rounded-[4px] bg-gray-100 ">
-            <span className="text-[14px] font-[500] text-textColor ">305 Days 11 : 58 : 32 </span>
-          </div>
-        </div>
-      </div>
-
-      {
-        isLoading ? (<SkeletonList count={5}/>) : (
-        <div className="mt-[30px] grid grid-cols-5 gap-5">
-          {
-            Array(5).fill(0).map((_, index) => {
-              return (
-                <Link key={index} to={`/productDetail/233231`}>
-                  <CardItem />
-                </Link>
-              )
-            })
-          }
-        </div>)
-      }
-      <div className="relative  mt-[60px]">
-        <div className="absolute top-[18%] right-[5%] max-w-[360px] ">
-          <h1 className="text-[34px] text-textColor font-[800] ">Sản phẩm đang giảm giá cao</h1>
-          <h3 className="text-[30px] font-[600] text-textColor">lên đến <span className="text-primaryColor">30% </span></h3>
-          <Button type='submit' variant={'primaryColor'} className=' rounded-[4px] px-[20px] flex items-center ml-auto mt-[20px] '>
-            Mua ngay
-          </Button>
-        </div>
-        <img
-          src="https://maraviyainfotech.com/projects/grabit-tailwind/grabit-tailwind/assets/img/banner/1.jpg"
-          alt=""
-          className="w-full h-[330px] object-cover rounded-[8px] "
-        />
-      </div>
-      <div className="mt-[50px] ">
-        <div className="flex items-center justify-between w-full ">
           <h1 className="text-[20px] font-[700] text-textColor ">Sản phẩm mới<span className="text-primaryColor "> Ra mắt</span></h1>
           <ul className="flex items-center gap-[14px]">
             <li className=""><span className="cursor-pointer text-[16px] font-[500] text-primaryColor">Trái cây</span></li>
@@ -131,6 +94,45 @@ export default function HomeScreen() {
             })
           }
 
+        </div>)
+      }
+
+
+      <div className="relative  mt-[60px]">
+        <div className="absolute top-[18%] right-[5%] max-w-[360px] ">
+          <h1 className="text-[34px] text-textColor font-[800] ">Sản phẩm đang giảm giá cao</h1>
+          <h3 className="text-[30px] font-[600] text-textColor">lên đến <span className="text-primaryColor">30% </span></h3>
+          <Button type='submit' variant={'primaryColor'} className=' rounded-[4px] px-[20px] flex items-center ml-auto mt-[20px] '>
+            Mua ngay
+          </Button>
+        </div>
+        <img
+          src="https://maraviyainfotech.com/projects/grabit-tailwind/grabit-tailwind/assets/img/banner/1.jpg"
+          alt=""
+          className="w-full h-[330px] object-cover rounded-[8px] "
+        />
+      </div>
+      <div className="mt-[50px] ">
+        <div className="flex items-center justify-between w-full ">
+          <h1 className="text-[20px] font-[700] text-textColor ">Sản phẩm đang <span className="text-primaryColor ">giảm giá</span></h1>
+          <div className="px-[12px] py-[8px] rounded-[4px] bg-gray-100 ">
+            <span className="text-[14px] font-[500] text-textColor ">305 Days 11 : 58 : 32 </span>
+          </div>
+        </div>
+      </div>
+
+      {
+        isLoading ? (<SkeletonList count={5}/>) : (
+        <div className="mt-[30px] grid grid-cols-5 gap-5">
+          {
+            Array(5).fill(0).map((_, index) => {
+              return (
+                <Link key={index} to={`/productDetail/233231`}>
+                  <CardItem />
+                </Link>
+              )
+            })
+          }
         </div>)
       }
       

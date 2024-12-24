@@ -8,7 +8,7 @@ interface Tab {
 
 interface TabsComponentProps {
   tabs: Tab[];
-  getIdTab: (id: number) => void; 
+  getIdTab: (id: any) => void; 
   className?: string
 }
 
@@ -37,7 +37,7 @@ const TabsComponent: React.FC<TabsComponentProps> = ({ tabs, getIdTab ,className
             ref={(el) => (tabRefs.current[tab.id] = el)}
             onClick={() => {
               setActiveTab(tab.id);
-              getIdTab(tab.id);
+              getIdTab(tab);
             }}
             className="cursor-pointer px-[12px] py-[12px] relative"
           >

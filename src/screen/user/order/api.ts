@@ -3,20 +3,21 @@ import { handleApi } from "@/service";
 
 
 
-export const getAllMyOrder=async ()=>{
+export const getAllMyOrder=async (typeOrder:string)=>{
   try {
-    const response=await handleApi('order/getOrderByUser')
+    const response=await handleApi(`order/${typeOrder}`)
     return response.data
   } catch (err:any) {
     throw err;
   }
 }
 
-export const getAllProductsRecent =async ()=>{
+export const destroyOrder=async (id:string)=>{
   try {
-    const response=await handleApi('product/getProductRecent')
+    const response=await handleApi(`order/destroy/${id}`,null,'POST')
     return response.data
   } catch (err:any) {
     throw err;
   }
 }
+

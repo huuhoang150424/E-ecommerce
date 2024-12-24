@@ -243,3 +243,38 @@
 .product-description p {
   @apply text-[14px] text-gray-400 ;
 }
+
+
+
+
+// @layer utilities {
+//   .star {
+//     @apply cursor-pointer text-gray-800 transition-colors ease-in-out duration-200;
+//   }
+
+//   .rate:hover .star {
+//     @apply text-yellow-400;
+//     text-shadow: 0 0 20px #fc0;
+//   }
+
+//   .rate:hover .star:nth-child(2) {
+//     transition-delay: 30ms;
+//   }
+
+//   .rate:hover .star:nth-child(3) {
+//     transition-delay: 60ms;
+//   }
+
+//   .rate:hover .star:nth-child(4) {
+//     transition-delay: 90ms;
+//   }
+
+//   .rate:hover .star:nth-child(5) {
+//     transition-delay: 120ms;
+//   }
+
+//   .rate .star:hover ~ .star {
+//     @apply text-gray-800;
+//     text-shadow: none;
+//   }
+// }

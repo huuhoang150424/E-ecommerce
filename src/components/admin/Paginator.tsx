@@ -48,7 +48,6 @@ export default function Paginator({
     }
     listPage.push({ page: String(totalPage) });
   }
-  console.log(listPage)
   return (
     <Pagination className={cn("justify-end", className)}>
       <PaginationContent className="cursor-pointer">

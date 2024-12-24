@@ -218,6 +218,7 @@ export default function ProductDetailScreen() {
                 <div className="w-[60%] flex flex-col gap-[20px] self-start">
                   <div className=" border border-gray-200 rounded-[4px] overflow-hidden p-[20px]   ">
                     <h1 className="text-[26px] font-[600] text-textColor ">{productDetail?.product_name}</h1>
+                    
                     <Rating
                       countStar={0}
                       classList="gap-[4px] items-center  mt-[10px]"
@@ -225,6 +226,7 @@ export default function ProductDetailScreen() {
                       styleLine="w-[2px] bg-slate-400 h-[18px] mx-[4px] "
                       text="(Đã bán 1k)"
                       styleText="text-[12px] font-[500] text-gray-400 "
+                      //isHover={true}
                     />
                     <div className="mt-[15px] flex items-center gap-[10px] ">
                       <h1 className="text-[22px] font-[700] text-primaryColor ">{productDetail?.price.toLocaleString('vi-VN')} vnđ</h1>

@@ -12,7 +12,10 @@ interface Props {
   renderSelect?: any
 }
 export default function Tables({ className, data, nameCol,renderRow,handleDelete ,handleUpdate,isUpdate=false,isAction=true,renderSelect}: Props) {
-  console.log(renderSelect)
+
+
+
+
   return (
     <div className={`${cn('overflow-x-auto shadow-md rounded-lg w-full', className)}`}>
       <table className="w-full text-sm text-gray-500 table-fixed">
@@ -48,7 +51,7 @@ export default function Tables({ className, data, nameCol,renderRow,handleDelete
                     (<span onClick={() => handleUpdate(row)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer ">Edit</span>)
                   }
                   <span onClick={()=>handleDelete(row)} className="font-medium text-red-600 dark:text-red-500 hover:underline ml-3 cursor-pointer ">Remove</span>
-                </td>) :(renderSelect())
+                </td>) :(renderSelect(row))
               }
             </tr>
           ))}
