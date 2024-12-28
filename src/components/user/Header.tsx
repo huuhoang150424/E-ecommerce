@@ -270,7 +270,7 @@ function Header({ className }: Props) {
                 <img
                   src={user.avatar}
                   alt="user"
-                  className="w-[30px] h-[30px] rounded-[50%] border border-gray-100 "
+                  className="w-[30px] h-[30px] rounded-[50%] border border-gray-200 object-cover"
                 />
                 <span>{ user.name.length>8?` ${user.name.substring(0,8)}..`:`${user.name}`  }</span>
               </HoverCardTrigger>

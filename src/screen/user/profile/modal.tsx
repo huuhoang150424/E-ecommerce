@@ -10,14 +10,14 @@ interface Props {
 
 const ChangePassword = lazy(() => import('./change-password'));
 const ChangePhone = lazy(() => import('./change-phone'));
+const Address = lazy(() => import('./address'));
 
-
-export default function Modal({type='create',closeDialog,onCloseDialog,element}:Props) {
+export default function Modal({type='create',closeDialog,onCloseDialog}:Props) {
   return (
     <Suspense >
       {type==='change-password' && <ChangePassword close={closeDialog} onClose={onCloseDialog}/>}
       {type==='change-phone' && <ChangePhone close={closeDialog} onClose={onCloseDialog}/>}
-      {/* {type==='update' && <UpdateCategoryModal close={closeDialog} onClose={onCloseDialog} category={element} />} */}
+      {type==='address' && <Address close={closeDialog} onClose={onCloseDialog}  />}
     </Suspense>
   )
 }

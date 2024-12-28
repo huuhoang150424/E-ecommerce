@@ -229,7 +229,6 @@
   @apply text-gray-600 hover:bg-gray-200 rounded transition;
 }
 
-/* Văn bản */
 .ck-content {
   @apply text-textColor font-sans leading-relaxed;
 }
@@ -244,7 +243,23 @@
   @apply text-[14px] text-gray-400 ;
 }
 
+::-webkit-scrollbar {
+  width: 5px; 
+}
 
+::-webkit-scrollbar-track {
+  background: transparent; 
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #939393;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 
 
 // @layer utilities {
@@ -278,3 +293,4 @@
 //     text-shadow: none;
 //   }
 // }
+

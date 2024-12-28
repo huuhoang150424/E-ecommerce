@@ -68,31 +68,31 @@ export const navIcon: navIcon[] = [
     isAccordion: false,
     children: []
   },
-  {
-    id: 3,
-    icon: "fa-regular fa-newspaper",
-    label: 'Tin tức',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 3.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createProduct',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 3.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/product',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
+  // {
+  //   id: 3,
+  //   icon: "fa-regular fa-newspaper",
+  //   label: 'Tin tức',
+  //   navigate: '/admin/category',
+  //   isAccordion: true,
+  //   children: [
+  //     {
+  //       id: 3.1,
+  //       icon: "fa-solid fa-plus",
+  //       label: 'Thêm sản phẩm',
+  //       navigate: '/admin/createProduct',
+  //       isAccordion: false,
+  //       children: []
+  //     },
+  //     {
+  //       id: 3.2,
+  //       icon: "fa-solid fa-list",
+  //       label: 'Danh sách sản phẩm',
+  //       navigate: '/admin/product',
+  //       isAccordion: false,
+  //       children: []
+  //     }
+  //   ]
+  // },
   {
     id: 4,
     icon: "fa-solid fa-warehouse",
@@ -109,31 +109,31 @@ export const navIcon: navIcon[] = [
     isAccordion: false,
     children: []
   },
-  {
-    id: 6,
-    icon: "fa-brands fa-salesforce",
-    label: 'Khuyến mãi',
-    navigate: '/admin/category',
-    isAccordion: true,
-    children: [
-      {
-        id: 6.1,
-        icon: "fa-solid fa-plus",
-        label: 'Thêm sản phẩm',
-        navigate: '/admin/createSale',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 6.2,
-        icon: "fa-solid fa-list",
-        label: 'Danh sách sản phẩm',
-        navigate: '/admin/sale',
-        isAccordion: false,
-        children: []
-      }
-    ]
-  },
+  // {
+  //   id: 6,
+  //   icon: "fa-brands fa-salesforce",
+  //   label: 'Khuyến mãi',
+  //   navigate: '/admin/category',
+  //   isAccordion: true,
+  //   children: [
+  //     {
+  //       id: 6.1,
+  //       icon: "fa-solid fa-plus",
+  //       label: 'Thêm sản phẩm',
+  //       navigate: '/admin/createSale',
+  //       isAccordion: false,
+  //       children: []
+  //     },
+  //     {
+  //       id: 6.2,
+  //       icon: "fa-solid fa-list",
+  //       label: 'Danh sách sản phẩm',
+  //       navigate: '/admin/sale',
+  //       isAccordion: false,
+  //       children: []
+  //     }
+  //   ]
+  // },
   {
     id: 7,
     icon: "fa-solid fa-layer-group",

@@ -18,7 +18,7 @@ export const updateUserForm = z.object({
   name: z.string().nonempty({ message: 'Trường tên không được để trống' }),
   email: z.string().email({ message: 'Email không hợp lệ' }).nonempty({ message: 'Trường email không được để trống' }),
   birth_date: z.string().nonempty({ message: 'Trường ngày sinh không được để trống' }),
-  gender: z.enum(["Male", "Female", "Other"]).refine((val:string) => val !== "", { message: 'Trường giới tính không được để trống' }),  
+  gender: z.enum(["Male" , "Female" , "Other"]).refine((val:string) => val !== "", { message: 'Trường giới tính không được để trống' }),  
   avatar: z.string().nonempty({ message: 'Trường ảnh không được để trống' }),
 });
 
@@ -31,11 +31,16 @@ export const changePhoneForm = z.object({
     .regex(/^\d+$/, { message: 'Số điện thoại phải là số' })
     .max(10, { message: 'Số điện thoại phải nhỏ hơn 10 ký tự' }) 
 });
+export const addAddress = z.object({
+  address: z
+    .string()
+    .nonempty({ message: 'Địa chỉ không được để trống' })
+});
 
 export type FormDataChangePassword=z.infer<typeof changePasswordForm>;
 export type FormDataChangePhone=z.infer<typeof changePhoneForm>;
 export type FormDataUpdateUser=z.infer<typeof updateUserForm>;
-
+export type FormDataAddDress=z.infer<typeof addAddress>;
 
 
 export const changePassword = async (data: any) => {
@@ -56,10 +61,9 @@ export const changePhone = async (data: any) => {
 }
 
 
-export const updateProfile = async (dataS: any) => {
-  const { id, ...payload } = dataS; 
+export const updateProfile = async (data: any) => {
   try {
-    const response = await handleApi(`auth/updateUser/${id}`, payload, 'PUT');
+    const response = await handleApi(`auth/updateProfile`, data, 'PUT');
     return response.data;
   } catch (err: any) {
     throw err;;
@@ -77,12 +81,19 @@ export const getProfile = async () => {
 
 
 
-export const pushAddress = async (dataS: any) => {
-  const { id, ...payload } = dataS; 
+export const pushAddress = async (data: any) => { 
   try {
-    const response = await handleApi(`auth/changePassword/${id}`, payload, 'PATCH');
+    const response = await handleApi(`auth/addAddress`, data, 'PATCH');
     return response.data;
   } catch (err: any) {
-    throw err;;
+    throw err;
+  }
+}
+export const deleteAddress = async (data: any) => { 
+  try {
+    const response = await handleApi(`auth/deleteAddress`, data, 'PATCH');
+    return response.data;
+  } catch (err: any) {
+    throw err;
   }
 }

@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Router from './router/Router';
 import { Toaster } from './components/ui/toaster';
-
 
 function App() {
   const cursorMouse = useRef<HTMLDivElement | null>(null);
@@ -19,7 +18,6 @@ function App() {
         cursorMouse.current.style.transform = `translate(${x + window.scrollX}px, ${y + window.scrollY}px)`;
       }
       if (smallDot.current) {
-        // Dấu chấm nhỏ di chuyển mượt hơn với hiệu ứng trễ
         smallDot.current.style.transform = `translate(${x + window.scrollX}px, ${y + window.scrollY}px)`;
       }
       lastMousePosition.current = { x, y };

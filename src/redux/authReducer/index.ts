@@ -9,7 +9,7 @@ interface User {
   phone: number;
   gender: string;
   address: string[];
-  birth_date: any | ""
+  birth_date: any | "";
 }
 
 interface AuthState {
@@ -46,7 +46,14 @@ const authSlice = createSlice({
       state.message='';
       state.loading=false;
       state.error=false;
-    }
+    },
+    updateAuth: (state, action:  PayloadAction<{ data: User }>) => {
+      console.log(action.payload.data);
+      state.user = {
+        ...state.user, 
+        ...action.payload.data
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,7 +75,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout,updateToken ,resetAuthState} = authSlice.actions;
+export const { logout,updateToken ,resetAuthState,updateAuth} = authSlice.actions;
 
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
 export const selectToken = (state: { auth: AuthState }) => state.auth.token;

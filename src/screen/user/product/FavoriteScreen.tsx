@@ -1,14 +1,48 @@
 import { Loading } from "@/components/common";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import { getAllFavoriteProduct } from "./api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAllFavoriteProduct, removeFavoriteProduct } from "./api";
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
 export default function FavoriteScreen() {
-  
+  const queryClient=useQueryClient();
+  const [selectValue, setSelectValue] = useState<string>("");
   const { data, isLoading } = useQuery({
-    queryKey: ['FừavoriteProduct'],
+    queryKey: ['FavoriteProduct'],
     queryFn: getAllFavoriteProduct
   })
+
+
+    //delete favorite
+    const mutationFavorite = useMutation({
+      mutationFn: removeFavoriteProduct,
+      onSuccess: (data: any) => {
+        queryClient.invalidateQueries({
+          queryKey: ['FavoriteProduct'],
+        });
+        console.log(data)
+        toast({
+          variant: 'success',
+          title: data?.result?.message,
+        })
+      },
+      onError: (error: any) => {
+        toast({
+          variant: 'destructive',
+          title: error?.response?.data?.error_message,
+        });
+      }
+    })
+    const { isPending: isLoadingDeleteFavorite } = mutationFavorite;
+  const handleSelectChange = (value: string, productId: string) => {
+    if (value === "deleteProductFavorite") {
+      mutationFavorite.mutate(productId);
+    }
+    setSelectValue("");
+  };
+
 
   return (
     <div className=" ">
@@ -24,7 +58,7 @@ export default function FavoriteScreen() {
           <Button variant={'default'} className="  bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-300 ease-in-out ">Thêm vào sản phẩm yêu thích</Button>
         </div>) : (<div className="">
           {
-            isLoading ? (<Loading
+            (isLoading || isLoadingDeleteFavorite) ? (<Loading
               className="my-[150px] "
             />) : (<ul className="mt-[20px] flex flex-col gap-[15px] border border-gray-200 px-[20px] py-[15px] rounded-[4px] ">
               {
@@ -42,7 +76,20 @@ export default function FavoriteScreen() {
                           <span className="text-gray-400 text-[14px] ">Số lượng còn lại: {item?.product?.stock}</span>
                         </div>
                         <div className="self-start ">
-                          <i className="fa-solid fa-ellipsis text-textColor mr-[10px]"></i>
+                          <Select
+                            value={selectValue}
+                            onValueChange={(value: string) => {
+                              setSelectValue(value);
+                              handleSelectChange(value, item?.product?.id);
+                            }}
+                          >
+                            <SelectTrigger isShowIcon={false} className="w-0 mr-[10px] border-none shadow-none">
+                              <i className="fa-solid fa-ellipsis text-textColor"></i>
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="deleteProductFavorite">Xóa</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
                     </li>

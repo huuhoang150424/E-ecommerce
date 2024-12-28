@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,SelectGroup,SelectLabel} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { useState } from "react";
 import { Loading } from "@/components/common";
 import { Paginator, Tables } from "@/components/admin";
@@ -14,25 +14,25 @@ import { toast } from "@/hooks/use-toast";
 export default function OrderScreen() {
   const [sizePage, setSizePage] = useState(6);
   const [currentPage, setCurrentPage] = useState(1);
-  const queryClient=useQueryClient();
+  const queryClient = useQueryClient();
   //fetch order
-  const {isLoading:loadingOrder,data:dataOrders}=useQuery({
-    queryKey: ['allOrders',{currentPage:currentPage,pageSize:sizePage}],
-    queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] })=>{
-      const [_,{currentPage,pageSize}]=queryKey;
-      return getAllOrder(currentPage,pageSize);
+  const { isLoading: loadingOrder, data: dataOrders } = useQuery({
+    queryKey: ['allOrders', { currentPage: currentPage, pageSize: sizePage }],
+    queryFn: ({ queryKey }: { queryKey: [string, { currentPage: number; pageSize: number }] }) => {
+      const [_, { currentPage, pageSize }] = queryKey;
+      return getAllOrder(currentPage, pageSize);
     }
   })
 
-  const handleChangePage=(page:number)=>{
+  const handleChangePage = (page: number) => {
     setCurrentPage(page)
   }
 
 
   //confirm order
-  const mutationConfirmOrder=useMutation({
+  const mutationConfirmOrder = useMutation({
     mutationFn: confirmOrder,
-    onSuccess: (data:any) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({
         queryKey: ['allOrders'],
       });
@@ -50,40 +50,38 @@ export default function OrderScreen() {
       });
     }
   })
-  const {isPending:isLoadingConfirm}=mutationConfirmOrder;
+  const { isPending: isLoadingConfirm } = mutationConfirmOrder;
   //destroy order
-  const mutationDestroyOrder=useMutation({
+  const mutationDestroyOrder = useMutation({
     mutationFn: destroyOrder,
-    onSuccess: (data:any) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({
         queryKey: ['allOrders'],
       });
-      console.log(data)
       toast({
         variant: 'success',
         title: data?.message,
       })
     },
     onError: (error: any) => {
-      console.error(error?.response?.data?.error_message);
       toast({
         variant: 'destructive',
         title: error?.response?.data?.error_message,
       });
     }
   })
-  const {isPending:isLoadingDestroy}=mutationDestroyOrder;
+  const { isPending: isLoadingDestroy } = mutationDestroyOrder;
 
-  const handleSelectChange = (value: string,id:string) => {
-    if (value==="confirm") {
+  const handleSelectChange = (value: string, id: string) => {
+    if (value === "confirm") {
       mutationConfirmOrder.mutate(id);
-      console.log("Selected value confirm: ", id); 
+      console.log("Selected value confirm: ", id);
     }
-    if (value==="destroy") {
-      mutationDestroyOrder.mutate(id); 
+    if (value === "destroy") {
+      mutationDestroyOrder.mutate(id);
     }
   };
-  
+
   return (
     <div className=''>
       <h1 className="mb-[15px] text-[20px] font-[700] text-textColor dark:text-white">Danh sách đơn hàng</h1>
@@ -136,7 +134,7 @@ export default function OrderScreen() {
         <div className="">
           {
             (loadingOrder || isLoadingConfirm || isLoadingDestroy) ? (<Loading className="mt-[200px] mb-[40px] " />) : (
-            <div className="">
+              <div className="">
                 <Tables
                   className="mb-[30px] border border-gray-200 shadow-none"
                   data={dataOrders?.result?.data}
@@ -165,31 +163,31 @@ export default function OrderScreen() {
                     )
                   }}
                   isAction={false}
-                  renderSelect={(row:any) => {
+                  renderSelect={(row: any) => {
                     return (
                       <td className=" flex items-center justify-center ">
-                        <Select onValueChange={(value:string)=>handleSelectChange(value,row.id)}>
+                        <Select onValueChange={(value: string) => handleSelectChange(value, row.id)}>
                           <SelectTrigger isShowIcon={false} className="w-[100px] border-none shadow-none ">
                             <div className="w-full h-full flex items-center justify-center">
                               <i className="fa-solid fa-ellipsis text-textColor mr-[10px]"></i>
                             </div>
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem onClick={()=>{console.log("hellow word")}} value="confirm">Xác nhận</SelectItem>
-                            <SelectItem onClick={()=>{console.log("hellow word")}} value="destroy">Hủy đơn</SelectItem>
+                            <SelectItem onClick={() => { console.log("hellow word") }} value="confirm">Xác nhận</SelectItem>
+                            <SelectItem onClick={() => { console.log("hellow word") }} value="destroy">Hủy đơn</SelectItem>
                           </SelectContent>
                         </Select>
                       </td>
                     )
                   }}
                 />
-              <Paginator
-                currentPage={dataOrders?.result?.currentPage}
-                totalPage={dataOrders?.result?.totalPages}
-                onPageChange={handleChangePage}
-              />
-            </div>
-          )
+                <Paginator
+                  currentPage={dataOrders?.result?.currentPage}
+                  totalPage={dataOrders?.result?.totalPages}
+                  onPageChange={handleChangePage}
+                />
+              </div>
+            )
           }
         </div>
       </div>
