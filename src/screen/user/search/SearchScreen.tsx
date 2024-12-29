@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,6 +16,7 @@ import { SkeletonList } from "@/components/common";
 export default function SearchScreen() {
   const [toPrice, setToPrice] = useState(0);
   const [fromPrice, setFromPrice] = useState(100);
+  const [listKeyword, setListKeyword] = useState<string[]>([]);
   const param=useParams();
 
 
@@ -26,9 +27,11 @@ export default function SearchScreen() {
       return getProductSearch(keyword);
     }
   })
-  console.log(dataSearch?.result?.data)
+  console.log(dataSearch?.result?.keyword)
 
-
+  useEffect(()=>{
+    setListKeyword(dataSearch?.result?.keyword)
+  },[dataSearch])
 
 
   return (
@@ -148,15 +151,16 @@ export default function SearchScreen() {
             <h2 className="text-[15px] text-textColor">Các từ khóa liên quan</h2>
             <ul className="flex items-center gap-[15px] ">
               {
-                Array(3).fill(0).map((_, index) => {
+                listKeyword?.slice(0, 4)?.map((keyword: string, index: number) => {
                   return (
-                    <li key={index} className="flex items-center gap-[5px]  border border-gray-200 rounded-[4px] px-[12px] py-[2px] cursor-pointer ">
-                      <span className="text-[14px] text-textColor ">Đồ ăn sấy khô</span>
-                      <i className="fa-solid fa-xmark text-[12px] text-red-400 "></i>
+                    <li key={index} className="flex items-center gap-[5px] border border-gray-200 rounded-[4px] px-[12px] py-[2px] cursor-pointer">
+                      <span className="text-[14px] text-textColor">{keyword}</span>
+                      <i className="fa-solid fa-xmark text-[12px] text-red-400"></i>
                     </li>
                   )
                 })
               }
+
               <li className="flex items-center gap-[5px]  border border-gray-200 rounded-[4px] px-[12px] py-[2px] bg-primaryColor cursor-pointer ">
                 <span className="text-[14px] text-white ">Xóa tất cả</span>
               </li>

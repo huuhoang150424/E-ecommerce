@@ -7,11 +7,11 @@ import { Link, useParams } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import useScrollToTopOnMount from "@/hooks/useScrollToTopOnMount";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addFavoriteProduct, deleteComments, FormDataComment, getComments, getProduct, postComment, removeFavoriteProduct, upLoadComment } from "./api";
+import { addFavoriteProduct, deleteComments, FormDataComment, getComments, getProduct, postComment, ratingProduct, removeFavoriteProduct, upLoadComment } from "./api";
 import { ImageMagnifier, Loading, LoadingSpinner } from "@/components/common";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger,} from '@/components/ui/select';
 import { toast } from "@/hooks/use-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -19,12 +19,15 @@ import { addToCart, getCart } from "@/redux/action/cart";
 import { resetCartState, selectError, selectLoading, selectMessage, selectSuccess } from "@/redux/cartReducer";
 import RelateProduct from "./related-product";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { selectUser } from "@/redux/authReducer";
+import { ListRating } from "@/screen/user/product/list-rating";
 
 
 
 
 export default function ProductDetailScreen() {
   useScrollToTopOnMount();
+  const userProfile=useSelector(selectUser)
   const dispatch=useDispatch<AppDispatch>();
   const loadingAddCart=useSelector(selectLoading);
   const successAddCart=useSelector(selectSuccess);
@@ -102,31 +105,23 @@ export default function ProductDetailScreen() {
   //delete comment
   const deleteMutation=useMutation({
     mutationFn: deleteComments,
-    onSuccess: ()=>{
-      queryClient.invalidateQueries({queryKey: ['comments']})
-    },
-    onError:()=>{
-      
-    }
-  })
-
-  const {isPending:loadingDeleteComment,data:deleteCommentData,isSuccess:isDeleteCommentSuccess,isError:isDeleteCommentFail,error:deleteCommentError}=deleteMutation as any;
-
-  useEffect(() => {
-    if (isDeleteCommentSuccess) {
+    onSuccess: (data)=>{
+      queryClient.invalidateQueries({queryKey: ['comments']});
       toast({
-        title: deleteCommentData?.result?.message,
+        title: data?.result?.message,
         variant: "success",
       });
-    }
-  
-    if (isDeleteCommentFail) {
+    },
+    onError:(error:any)=>{
       toast({
-        title: deleteCommentError?.response?.data?.error_message?.message,
+        title: error?.response?.data?.error_message?.message,
         variant: "destructive",
       });
     }
-  }, [isDeleteCommentSuccess, isDeleteCommentFail]);
+  })
+
+  const {isPending:loadingDeleteComment}=deleteMutation as any;
+
   
   
   //delete and update
@@ -164,7 +159,12 @@ export default function ProductDetailScreen() {
   };
 
 
-
+  //rating product
+  const getRating=async (rating:number) =>{
+    await ratingProduct(rating,productDetail.id);
+  }
+  //getCount star 
+  const countStart=productDetail?.ratings?.filter((star:any)=>star.user_info.id===userProfile?.id)[0]
 
 
   return (
@@ -220,13 +220,14 @@ export default function ProductDetailScreen() {
                     <h1 className="text-[26px] font-[600] text-textColor ">{productDetail?.product_name}</h1>
                     
                     <Rating
-                      countStar={0}
+                      countStar={countStart?.rating}
                       classList="gap-[4px] items-center  mt-[10px]"
                       styleStar="text-[12px] "
                       styleLine="w-[2px] bg-slate-400 h-[18px] mx-[4px] "
                       text="(Đã bán 1k)"
                       styleText="text-[12px] font-[500] text-gray-400 "
-                      //isHover={true}
+                      isHover={false}
+                      onRatingChange={getRating}
                     />
                     <div className="mt-[15px] flex items-center gap-[10px] ">
                       <h1 className="text-[22px] font-[700] text-primaryColor ">{productDetail?.price.toLocaleString('vi-VN')} vnđ</h1>
@@ -273,7 +274,7 @@ export default function ProductDetailScreen() {
                       spaceBetween={30}
                       slidesPerView={2}
                       onSlideChange={() => console.log('slide change')}
-                      onSwiper={(swiper) => console.log(swiper)}
+                      onSwiper={() => {}}
                     >
                       <SwiperSlide>
                         <RelateProduct/>
@@ -297,37 +298,24 @@ export default function ProductDetailScreen() {
                   <div className="">
                     <h5 className="text-[15px] font-[400] text-textColor">Tổng quan</h5>
                     <div className="flex items-center gap-[15px] ">
-                      <h1 className="text-textColor text-[30px] font-[600] ">5.8</h1>
+                      <h1 className="text-textColor text-[30px] font-[600] ">
+                        {productDetail?.average_rating}
+                      </h1>
                       <Rating
                         countStar={5}
                         classList="flex gap-[4px] "
                       />
                     </div>
-                    <span className="text-[15px] font-[400] text-lineColor">(450 đánh giá) </span>
-                    <ul className="flex flex-col gap-[0px] mt-[10px] ">
-                      {
-                        Array(5).fill(0).map((_, index) => {
-                          return (
-                            <li key={index} className="flex items-center gap-[10px] ">
-                              <Rating
-                                countStar={5}
-                                classList="flex gap-[2px] "
-                                styleStar="text-[12px] "
-                              />
-                              <div className="w-[150px] h-[6px] relative rounded-[12px] bg-gray-300 overflow-hidden">
-                                <div className="absolute w-[50%] h-full bg-primaryColor rounded-[12px]"></div>
-                              </div>
-                              <span className="text-[12px] text-gray-400">5</span>
-                            </li>
-                          )
-                        })
-                      }
-                    </ul>
+                    <span className="text-[15px] font-[400] text-lineColor">({productDetail?.ratings.length} đánh giá) </span>
+                    {
+                      productDetail?.ratings?.length>0 && <div className="">{<ListRating ratings={productDetail?.ratings}/>}</div>
+                    }
+                    
+
                   </div>
                   <div className="w-[0.6px] bg-gray-200 ml-[50px] "></div>
                   <div className="w-full  ">
                     <h5 className="text-[15px] font-[400] text-textColor">Bình luận của bạn</h5>
-
                     {
                       loadingPostComment ? (<LoadingSpinner className="mx-auto mt-[50px] "/>) : (
                       <form className="mt-[15px] flex items-center gap-[15px] " onSubmit={handleSubmit(onSubmit)} method="POST">
@@ -335,7 +323,6 @@ export default function ProductDetailScreen() {
                         <Button className="font-[500] hover:bg-primaryColor transition-all duration-300 ease-linear text-white bg-primaryColor" variant={'default'}>Gửi</Button>
                       </form>)
                     }
-
                   </div>
                 </div>
                 <div className="w-full h-[0.5px] bg-gray-200 mb-[20px] mt-[30px] "></div>
@@ -348,7 +335,6 @@ export default function ProductDetailScreen() {
                 </div>
                 <div className="w-full h-[0.5px] bg-gray-200 mb-[30px] my-[15px] "></div>
                 {/* comment */}
-
                 {
                   loadingComment ? (<Loading className="mt-[70px] mb-[50px] " />) : (
                     <div className="w-full flex flex-col   ">

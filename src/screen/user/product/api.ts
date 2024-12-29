@@ -107,3 +107,17 @@ export const removeFavoriteProduct =async (productId:String)=>{
     throw err;
   }
 }
+
+
+export const ratingProduct =async (rating:number,productId:String)=>{
+  try {
+    const response=await handleApi(
+      `/review/ratingProduct/${productId}`,{
+        rating
+      },'POST'
+    );
+    return response.data;
+  } catch (err:any) {
+    throw err;
+  }
+}

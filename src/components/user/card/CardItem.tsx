@@ -34,7 +34,7 @@ export default function CardItem({product}:Props) {
         </span>
         <div className="mt-[10px] ">
           <Rating
-            countStar={0}
+            countStar={4}
             classList="gap-[4px] "
             styleStar="text-[12px] "
           />
