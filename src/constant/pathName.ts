@@ -44,14 +44,6 @@ export const navIcon: navIcon[] = [
       },
       {
         id: 1.3,
-        icon: "fa-solid fa-wand-magic-sparkles",
-        label: 'Đánh giá sản phẩm',
-        navigate: '/admin/review',
-        isAccordion: false,
-        children: []
-      },
-      {
-        id: 1.4,
         icon: "fa-solid fa-magnet",
         label: 'Thuộc tính sản phẩm',
         navigate: '/admin/attributes',
@@ -68,31 +60,14 @@ export const navIcon: navIcon[] = [
     isAccordion: false,
     children: []
   },
-  // {
-  //   id: 3,
-  //   icon: "fa-regular fa-newspaper",
-  //   label: 'Tin tức',
-  //   navigate: '/admin/category',
-  //   isAccordion: true,
-  //   children: [
-  //     {
-  //       id: 3.1,
-  //       icon: "fa-solid fa-plus",
-  //       label: 'Thêm sản phẩm',
-  //       navigate: '/admin/createProduct',
-  //       isAccordion: false,
-  //       children: []
-  //     },
-  //     {
-  //       id: 3.2,
-  //       icon: "fa-solid fa-list",
-  //       label: 'Danh sách sản phẩm',
-  //       navigate: '/admin/product',
-  //       isAccordion: false,
-  //       children: []
-  //     }
-  //   ]
-  // },
+  {
+    id: 3,
+    icon: "fa-solid fa-wand-magic-sparkles",
+    label: 'Đánh giá sản phẩm',
+    navigate: '/admin/review',
+    isAccordion: false,
+    children: []
+  },
   {
     id: 4,
     icon: "fa-solid fa-warehouse",

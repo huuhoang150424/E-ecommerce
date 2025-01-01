@@ -1,13 +1,13 @@
-import  DashBoardScreen  from './DashBoardScreen';
-import CategoryScreen from './Category/CategoryScreen';
-import ProductScreen from './Products/ProductScreen';
-import CreateProductScreen from './Products/CreateProductScreen';
-import ReviewScreen from './Products/ReviewScreen';
-import UserScreen from './User/UserScreen';
-import WarehouseScreen from './Warehouse/WarehouseScreen';
-import AttributesScreen from './Attributes/AttributesScreen';
-import OrderScreen from './Order/OrderScreen';
-import EditProduct from './Products/EditProduct';
+import  DashBoardScreen  from '@/screen/admin/DashBroad/DashBoardScreen';
+import CategoryScreen from '@/screen/admin/Category/CategoryScreen';
+import ProductScreen from '@/screen/admin/Products/ProductScreen';
+import CreateProductScreen from '@/screen/admin/Products/CreateProductScreen';
+import ReviewScreen from '@/screen/admin/Review/ReviewScreen';
+import UserScreen from '@/screen/admin/User/UserScreen';
+import WarehouseScreen from '@/screen/admin/Warehouse/WarehouseScreen';
+import AttributesScreen from '@/screen/admin/Attributes/AttributesScreen';
+import OrderScreen from '@/screen/admin/Order/OrderScreen';
+import EditProduct from '@/screen/admin/Products/EditProduct';
 
 export {
   DashBoardScreen,
