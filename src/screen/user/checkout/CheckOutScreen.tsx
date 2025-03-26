@@ -4,9 +4,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { resetCartSelect, selectCartSelect, selectItem } from "@/redux/cartReducer";
 import { AppDispatch } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Modal from "./modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { buyCod, buyCodForm, FormBuyCod } from "./api";
@@ -17,43 +17,41 @@ import { getCart } from "@/redux/action/cart";
 import { selectUser } from "@/redux/authReducer";
 
 export default function CheckOutScreen() {
-  const user=useSelector(selectUser);
+  const user = useSelector(selectUser);
   const [openModal, setOpenModal] = useState(false);
   const [selectedValueTypePayment, setSelectedValueTypePayment] = useState("cod");
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const carts = useSelector(selectCartSelect);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormBuyCod>({
+  const { reset } = useForm<FormBuyCod>({
     resolver: zodResolver(buyCodForm)
   });
 
   const mutation = useMutation({
     mutationFn: buyCod,
-    onSuccess: () => {
-      reset();
-    },
-    onError: (error: any) => {
-      console.error('Tạo thất bại:', error);
-    },
-  })
-  const { isPending, isSuccess, data, error, isError } = mutation;
-
-  const onSubmit = (dataS: FormBuyCod) => {
-    mutation.mutate(dataS);
-  }
-  useEffect(()=>{
-    if (isSuccess) {
-      console.log(data)
+    onSuccess: (data) => {
       toast({
         variant: 'success',
         title: data?.result.message
       })
       dispatch(resetCartSelect())
       dispatch(getCart())
-    }
-
-  },[isSuccess,isError])
+      reset();
+    },
+    onError: (error: any) => {
+      toast({
+        variant: 'destructive',
+        title: error?.response?.data?.error_message?.message
+      });
+    },
+  })
+  const { isPending } = mutation;
+  const onSubmit = (dataS: FormBuyCod) => {
+    mutation.mutate(dataS);
+  }
+  const totalItem = carts.reduce((total, cartItem) => total + cartItem.product.price, 0)
+  console.log(totalItem)
 
   return (
     <div className="grid grid-cols-12 grid-rows-1 gap-6 my-[50px]">
@@ -78,7 +76,7 @@ export default function CheckOutScreen() {
             </div>) : (
             <div className=" flex flex-col gap-[15px] ">
               {
-                isPending?(<Loading className="my-[110px] "/>):(              <div className="border border-gray-200 rounded-[4px] overflow-hidden  px-[20px] py-[20px]">
+                isPending ? (<Loading className="my-[110px] " />) : (<div className="border border-gray-200 rounded-[4px] overflow-hidden  px-[20px] py-[20px]">
                   <h1 className="text-[16px] text-textColor font-[500] ">Giao hàng nhanh chóng</h1>
                   <div className="border border-primaryColor w-[40%] mt-[15px] rounded-[6px] px-[20px] py-[18px]">
                     <RadioGroup defaultValue="comfortable" className="flex flex-col gap-[20px] ">
@@ -179,45 +177,45 @@ export default function CheckOutScreen() {
             <span className="text-[15px] text-primaryColor font-[500] ">Thay đổi</span>
           </div>
           <div className="flex items-center gap-[10px] mt-[10px]">
-            <h3 className="text-[15px] font-[500] text-textColor ">Nguyễn Hữu Hoàng</h3>
+            <h3 className="text-[15px] font-[500] text-textColor ">{user?.name}</h3>
             <div className="w-[2px] h-[20px] bg-gray-300"></div>
-            <h3 className="text-[15px] font-[500] text-textColor ">0349938737</h3>
+            <h3 className="text-[15px] font-[500] text-textColor ">{user?.phone}</h3>
           </div>
           <div className="mt-[15px]  flex items-center gap-[10px]">
             <div className="px-[6px] self-start flex items-center justify-center  py-[2px] rounded-[4px] bg-green-100 ">
               <span className="text-[14px] text-green-600 font-[500] ">Nhà</span>
             </div>
-            <span className="text-[14px] text-gray-500 font-[500] " >52 Trần Hưng Đạo, Phường Đại Kim, Quận Hoàng Mai, Hà Nội</span>
+            <span className="text-[14px] text-gray-500 font-[500] " >{user?.address[0]}</span>
           </div>
         </div>
         <div className="border border-gray-200 rounded-[4px] overflow-hidden  px-[20px] py-[20px] ">
           <div className="flex items-center justify-between ">
             <h1 className="text-[17px] text-gray-700 font-[400] ">Đơn hàng</h1>
-            <span className="text-[15px] text-primaryColor font-[500] ">Thay đổi</span>
+            <Link to={'/cartScreen'} className="text-[15px] text-primaryColor font-[500] ">Thay đổi</Link>
           </div>
           <span className="text-[14px] mt-[10px] text-gray-500 ">4 sản phẩm</span>
           <div className="h-[0.5px] w-full bg-gray-200 my-[15px] "></div>
           <ul className="flex flex-col gap-[8px]">
             <li className="flex justify-between items-center">
               <h3 className="text-textColor ">Tổng tiền hàng</h3>
-              <span className="text-[14px] text-gray-700 font-[400] ">431.000đ</span>
+              <span className="text-[14px] text-gray-700 font-[400] ">11.000đ</span>
             </li>
             <li className="flex justify-between items-center">
               <h3 className="text-textColor ">Phí vận chuyển</h3>
-              <span className="text-[14px] text-gray-700 font-[400] ">431.000đ</span>
+              <span className="text-[14px] text-gray-700 font-[400] ">11.000đ</span>
             </li>
             <li className="flex justify-between items-center">
               <h3 className="text-textColor ">Giảm giá trực tiếp</h3>
-              <span className="text-[14px] text-gray-700 font-[400] ">431.000đ</span>
+              <span className="text-[14px] text-gray-700 font-[400] ">11.000đ</span>
             </li>
           </ul>
           <div className="h-[0.5px] w-full bg-gray-200 my-[15px] "></div>
           <div className="flex items-center justify-between ">
             <h3 className="text-[16px] text-textColor  ">Tổng tiền thanh toán</h3>
-            <span className="text-red-500 text-[18px] font-[500] ">50.000  vnđ</span>
+            <span className="text-red-500 text-[18px] font-[500] "> {totalItem.toLocaleString('vi-VN')} vnđ</span>
           </div>
           <div className="w-full mt-[5px] flex flex-col  justify-end">
-            <span className="text-green-600 text-right   text-[14px] font-[400] ">tiết kiệm  ( 50.000 vnđ )</span>
+            <span className="text-green-600 text-right   text-[14px] font-[400] ">tiết kiệm  ( 30.000 vnđ )</span>
             <span className="text-gray-400 text-right   text-[12px] font-[400] mt-[4px] ">Đã bao gồm thuế VAT</span>
           </div>
           <Button
@@ -230,13 +228,10 @@ export default function CheckOutScreen() {
                   receiver_phone: user?.phone ?? 1234567890,
                 })
               }
-
-
             }}
             className="bg-primaryColor transition-all duration-300 ease-linear hover:bg-primaryColor text-white w-full mt-[20px] hover:opacity-80"
           >Mua hàng</Button>
         </div>
-
       </div>
     </div>
   )

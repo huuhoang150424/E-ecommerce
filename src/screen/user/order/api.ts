@@ -14,10 +14,19 @@ export const getAllMyOrder=async (typeOrder:string)=>{
 
 export const destroyOrder=async (id:string)=>{
   try {
-    const response=await handleApi(`order/destroy/${id}`,null,'POST')
+    const response=await handleApi(`order/destroy/${id}`,null,'PUT')
     return response.data
   } catch (err:any) {
     throw err;
   }
 }
 
+//xác nhận đơn hàng
+export const receivedOrder=async (id:string)=>{
+  try {
+    const response=await handleApi(`order/received/${id}`,null,'PUT')
+    return response.data
+  } catch (err:any) {
+    throw err;
+  }
+}

@@ -6,15 +6,22 @@ import { useQuery } from '@tanstack/react-query';
 import { getRevenueForTheYear } from './api';
 
 
-function Overview() {
+interface Props {
+  year: number
+}
+
+function Overview({year}:Props) {
 
   const { isLoading, data } = useQuery({
-    queryKey: ['revenueAnalysis'],
-    queryFn:()=> getRevenueForTheYear(2024),
+    queryKey: ['revenueAnalysis',{ year: year }],
+    queryFn:({ queryKey }: { queryKey: [string, { year: number}] })=>{
+      const [, { year }] = queryKey;
+      return getRevenueForTheYear(year)
+    } 
   });
 
   return (
-    <ResponsiveContainer width='100%' height={350}>
+    <ResponsiveContainer width='100%' height={350} >
       <BarChart data={data?.result?.data}>
         <CartesianGrid vertical={false} stroke="#ccc" strokeDasharray="5 5" />
         <XAxis
@@ -47,17 +54,16 @@ function Overview() {
 }
 
 export default function Chart() {
+  const [year, setYear] = useState(new Date().getFullYear());
 
-  const [sizePage, setSizePage] = useState(2025);
-  
   return (
     <Card className='self-start col-span-1 lg:col-span-4 rounded-[6px] border border-gray-200 shadow-sm cursor-pointer dark:bg-colorDarkMode dark:border-borderDarkMode transition-all duration-500 ease-linear'>
     <CardHeader className='flex flex-row items-center justify-between '>
       <CardTitle>Doanh thu của từng tháng</CardTitle>
       <Select
-          value={`${sizePage}`}
+          value={`${year}`}
           onValueChange={(value) => {
-            setSizePage(Number(value))
+            setYear(Number(value))
           }}
         >
           <SelectTrigger className='h-8 w-[70px]  shadow-none '>
@@ -72,8 +78,8 @@ export default function Chart() {
           </SelectContent>
         </Select>
     </CardHeader>
-    <CardContent className='pl-2'>
-      <Overview />
+    <CardContent className='pl-2 px-6 py-3'>
+      <Overview year={year}/>
     </CardContent>
   </Card>
   )

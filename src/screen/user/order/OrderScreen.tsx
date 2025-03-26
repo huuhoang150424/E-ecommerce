@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TabsComponent } from "@/components/user";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { destroyOrder, getAllMyOrder } from "./api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { destroyOrder, getAllMyOrder, receivedOrder } from "@/screen/user/order/api";
 import { Loading, LoadingSpinner } from "@/components/common";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast";
 const tabs: any[] = [{ id: 1, label: "Tất cả", typeOrder: 'getOrderByUser' }, { id: 2, label: "Đợi xác nhận", typeOrder: 'getOrderProcessing' }, { id: 3, label: "Đã hủy", typeOrder: 'getOrderDestroy' }, { id: 4, label: "Đã nhận hàng", typeOrder: 'getOrderReceived' }, { id: 5, label: "Đang giao", typeOrder: 'getOrderShipped' }];
 
 export default function OrderScreen() {
+  const queryClient=useQueryClient();
   const [typeOrder, setTypeOrder] = useState('getOrderByUser');
 
 
@@ -21,26 +22,56 @@ export default function OrderScreen() {
       return getAllMyOrder(typeOrder);
     }
   })
-
+  //destroy order
   const mutation = useMutation({
     mutationFn: destroyOrder,
     onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ['myOrder']
+      })
+      console.log(data?.result?.message)
       toast({
         variant: 'success',
-        title: data?.message,
+        title: data?.result?.message
       });
     },
     onError: (error: any) => {
-      console.error(error?.response?.data?.error_message);
       toast({
         variant: 'destructive',
-        title: error?.response?.data?.error_message,
+        title: error?.response?.data?.error_message?.error_message,
       });
     },
   })
 
   const { isPending: isLoadingDestroyOrder } = mutation;
 
+
+  //received order
+  const mutationReceived = useMutation({
+    mutationFn: receivedOrder,
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({
+        queryKey: ['myOrder']
+      })
+      console.log(data?.result?.message)
+      toast({
+        variant: 'success',
+        title: data?.result?.message
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        variant: 'destructive',
+        title: error?.response?.data?.error_message?.error_message,
+      });
+    },
+  })
+
+  const { isPending: isLoadingReceivedOrder } = mutationReceived;
+
+
+
+  //format data
   const normalizeOrderData = (data: any, typeOrder: string) => {
     if (typeOrder === "getOrderByUser") {
       return data?.map((order: any) => ({
@@ -86,7 +117,7 @@ export default function OrderScreen() {
         />
       </div>
       {
-        loadingOrder ? (
+        (loadingOrder || isLoadingReceivedOrder || isLoadingDestroyOrder) ? (
           <Loading className="my-[200px]" />
         ) : (
           <div>
@@ -148,7 +179,12 @@ export default function OrderScreen() {
                           >
                             Hủy đơn hàng
                           </Button>
-                          <Button className="bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-200">
+                          <Button
+                            className="bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-200"
+                            onClick={() => {
+                              mutationReceived.mutate(orders.id);
+                            }}
+                          >
                             Đã nhận hàng
                           </Button>
                         </div>

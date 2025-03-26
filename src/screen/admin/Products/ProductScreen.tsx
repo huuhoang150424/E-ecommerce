@@ -75,7 +75,6 @@ export default function ProductScreen() {
                   {
                     data?.result?.data?.length === 0 ? (<NoResult />) : (
                       <div className="">
-
                         <Tables
                           nameCol={["Tên sản phẩm", "Ảnh", "Giá", "Số lượng ", "Trạng thái", "Đánh giá", "Bình luận", "Số lượt mua"]}
                           className="mb-[30px] border border-gray-200 shadow-none mt-[30px] "
@@ -94,10 +93,10 @@ export default function ProductScreen() {
                                   />
                                 </div>
                                 <div className="flex-1 text-left">
-                                  <span className="ml-[20px] ">{row.price}</span>
+                                  <span className="ml-[5px] ">{row.price.toLocaleString()} vnđ</span>
                                 </div>
                                 <div className="flex-1 text-left">
-                                  <span className="ml-[20px] ">{row.stock}</span>
+                                  <span className="ml-[20px] ">{row.stock.toLocaleString() }</span>
                                 </div>
                                 <div className="flex-1 text-left">
                                   <span className="ml-[20px] text-[14px] ">{row.status}</span>

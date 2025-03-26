@@ -1,5 +1,6 @@
 import {Card,CardContent, CardHeader} from "@/components/ui/card"
 import Rating from "../Rating"
+import { useNavigate } from "react-router-dom"
 
 interface Props {
   product?: any
@@ -7,9 +8,11 @@ interface Props {
 
 
 export default function CardItem({product}:Props) {
+  const navigate=useNavigate();
+
 
   return (
-    <Card className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
+    <Card onClick={()=>navigate(`/productDetail/${product.id}`)} className="max-w-[240px] border rounded-[6px] border-gray-200 cursor-pointer p-0 overflow-hidden">
       <CardHeader className="p-0 bg-white h-[260px]  overflow-hidden relative group">
         <ul className="absolute z-10 bottom-[5%]  mx-auto w-full flex gap-[10px]  justify-center items-center opacity-0 -translate-y-[-10px] transition-all duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
           <li className="px-[8px] py-[3px] rounded-[4px]  bg-white border border-gray-200  ">

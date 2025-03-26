@@ -14,7 +14,7 @@ export const getAllOrder=async (page: number, pageSize: number)=>{
 
 export const confirmOrder =async (id:string)=>{
   try {
-    const response=await handleApi(`order/confirmOrder/${id}`,null,'POST')
+    const response=await handleApi(`order/confirmOrder/${id}`,null,'PUT')
     return response.data
   } catch (err:any) {
     throw err;
@@ -22,7 +22,16 @@ export const confirmOrder =async (id:string)=>{
 }
 export const destroyOrder =async (id:string)=>{
   try {
-    const response=await handleApi(`order/destroy/${id}`,null,'POST')
+    const response=await handleApi(`order/destroy/${id}`,null,'PUT')
+    return response.data
+  } catch (err:any) {
+    throw err;
+  }
+}
+
+export const getListOrderChange =async (id:string)=>{
+  try {
+    const response=await handleApi(`order/getListOrderChange/${id}`)
     return response.data
   } catch (err:any) {
     throw err;

@@ -6,26 +6,83 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { getCart } from '@/redux/action/cart';
+import {  FavoriteScreen, OrderScreen, ProfileScreen } from '@/screen/user';
+
+export interface Route {
+  path: string;
+  element: React.ReactNode;
+  breadcrumbName: string;
+  children?: Route[]; 
+}
+
+
+export const routes: Route[] = [
+  {
+    path: '/',
+    element: <HomeScreen />,
+    breadcrumbName: 'Trang chủ',
+  },
+  {
+    path: '/productDetail/:id',
+    element: <ProductDetailScreen />,
+    breadcrumbName: 'Chi tiết sản phẩm',
+  },
+  {
+    path: '/cartScreen',
+    element: <CartScreen />,
+    breadcrumbName: 'Giỏ hàng',
+  },
+  {
+    path: '/checkOutScreen',
+    element: <CheckOutScreen />,
+    breadcrumbName: 'Thanh toán',
+  },
+  {
+    path: '/searchScreen/:keyword',
+    element: <SearchScreen />,
+    breadcrumbName: 'Tìm kiếm',
+  },
+  {
+    path: "/profile/*",
+    element: <ProfileRouter />,
+    breadcrumbName: "Hồ sơ",
+    children: [
+      {
+        path: "",
+        element: <ProfileScreen />,
+        breadcrumbName: "Thông tin cá nhân",
+      },
+      {
+        path: "orderScreen",
+        element: <OrderScreen />,
+        breadcrumbName: "Đơn hàng",
+      },
+      {
+        path: "favoriteScreen",
+        element: <FavoriteScreen />,
+        breadcrumbName: "Yêu thích",
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <NotFoundScreen />,
+    breadcrumbName: 'Không tìm thấy',
+  },
+];
 
 export default function MainRouter() {
-  const dispatch=useDispatch<AppDispatch>()
-  
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
-
-    dispatch(getCart())
-  }, [dispatch])
-
-
+    dispatch(getCart());
+  }, [dispatch]);
   return (
     <MainLayout>
       <Routes>
-        <Route path='/' element={<HomeScreen />} />
-        <Route path='/productDetail/:id' element={<ProductDetailScreen />} />
-        <Route path='/cartScreen' element={<CartScreen />} />
-        <Route path='/checkOutScreen' element={<CheckOutScreen />} />
-        <Route path='/searchScreen/:keyword' element={<SearchScreen />} />
-        <Route path='/profile/*' element={<ProfileRouter />} />
-        <Route path='*' element={<NotFoundScreen />} />
+        {routes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
       </Routes>
     </MainLayout>
   );

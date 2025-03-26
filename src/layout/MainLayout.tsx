@@ -48,7 +48,7 @@ export default function MainLayout({ children }: Props) {
     <div className=''>
       <Header />
       <div className="wrapper ">
-        <BreadcrumbCustom />
+        {/* <BreadcrumbCustom /> */}
         <main>
           {children}
         </main>

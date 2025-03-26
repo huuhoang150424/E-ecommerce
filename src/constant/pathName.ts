@@ -1,7 +1,4 @@
 
-
-
-
 export interface navIcon {
   id: number;
   icon: string;
@@ -145,3 +142,7 @@ export const pathName = {
     statistical: 'statistical',
   }
 };
+
+
+
+

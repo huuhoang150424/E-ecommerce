@@ -21,8 +21,8 @@ import RelateProduct from "./related-product";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { selectUser } from "@/redux/authReducer";
 import { ListRating } from "@/screen/user/product/list-rating";
-
-
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { vi } from 'date-fns/locale'; 
 
 
 export default function ProductDetailScreen() {
@@ -38,6 +38,7 @@ export default function ProductDetailScreen() {
   const param = useParams();
   const [imageActivate, setImageActivate] = useState<string | undefined>(undefined);
   const queryClient=useQueryClient()
+  
   const { isLoading:isLoadingProduct, data: productDetail } = useQuery({
     queryKey: ['productDetail', param.id],
     queryFn: () => getProduct(param.id ?? ""),
@@ -358,7 +359,7 @@ export default function ProductDetailScreen() {
                                       <div className=" flex flex-col gap-[6px] bg-[#efeff1] px-[16px] pt-[6px] pb-[10px]  rounded-[18px] ">
                                         <div className="flex flex-col">
                                           <h4 className="text-[16px] font-[500] text-textColor ">{comment?.user_info?.name}</h4>
-                                          <span className="text-[12px] font-[400] text-gray-400  ">2 giờ trước</span>
+                                          <span className="text-[12px] font-[400] text-gray-400  ">{formatDistanceToNow(parseISO(comment?.created_at),{ addSuffix: true, locale: vi })}</span>
                                         </div>
                                         <div className="  ">
                                           <p className="text-[16px] text-textColor ">{comment?.comment}</p>
@@ -431,7 +432,7 @@ export default function ProductDetailScreen() {
                   <Button onClick={() => setCounter(counter > 98 ? 99 : counter + 1)} size={'square'} variant={'outline'} className="px-[12px] py-[11px] "><i className="fa-solid fa-plus text-textColor"></i></Button>
                 </div>
                 <h3 className="text-[16px] font-[600] text-textColor mt-[15px] ">Tạm tính</h3>
-                <h1 className="text-[26px] font-[600] text-textColor mt-[10px] ">150.000 vnđ</h1>
+                <h1 className="text-[26px] font-[600] text-textColor mt-[10px] ">{(productDetail?.price*counter)?.toLocaleString()} vnđ</h1>
                 <Button className="w-full mt-[10px] bg-primaryColor hover:bg-primaryColor hover:opacity-80 transition-all duration-300 ease-linear">Mua ngay</Button>
                 {
                   loadingAddCart ? (<LoadingSpinner className="mx-auto mt-[20px]" />) : (<Button

@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
 import NoResult from "@/components/admin/NoResult";
 import { Loading } from "@/components/common";
@@ -57,25 +56,6 @@ export default function UserScreen() {
             onCloseDialog={() => setCloseDialog(false)}
             element={user}
           />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size={'square'} variant={'outline'} className="px-[14px] py-[6px] outline-none text-textColor text-[14px] font-[400] ">Lọc</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className='w-56' align='end' forceMount>
-              <DropdownMenuLabel className='font-normal'>
-                <div className='flex flex-col space-y-1'>
-                  <p className='text-sm font-medium leading-none'>satnaing</p>
-                  <p className='text-xs leading-none text-muted-foreground '>nguyenhoanghuu15042004@gm...</p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Trang cá nhân</DropdownMenuItem>
-                <DropdownMenuItem>Cài đặt</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
         <Select
           value={`${sizePage}`}
